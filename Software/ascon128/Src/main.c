@@ -21,35 +21,16 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
 #include <aead.h>
 #define ENCRYPT(a,b,c,d,e,f,g,h,i) crypto_aead_encrypt(a,b,c,d,e,f,g,h,i)
 #define DECRYPT(a,b,c,d,e,f,g,h,i) crypto_aead_decrypt(a,b,c,d,e,f,g,h,i)
 
 #define MSG_SIZE 16
 
-/* USER CODE END Includes */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-//typedef unsigned long long bit64;
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
 /* Private variables ---------------------------------------------------------*/
 
 TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim7;
-
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
@@ -64,6 +45,20 @@ static void MX_GPIO_Init(void);
 static void MX_TIM6_Init(void);
 static void MX_TIM7_Init(void);
 static void MX_USART3_UART_Init(void);
+
+
+void send_serial(uint8_t *data, int size){
+
+	HAL_UART_Transmit(&huart3, data, size, HAL_MAX_DELAY);
+
+}
+
+void receive_serial(uint8_t *data, int size){
+
+	HAL_UART_Receive(&huart3, data, size, HAL_MAX_DELAY);
+
+}
+
 /* USER CODE BEGIN PFP */
 /* USER CODE END PFP */
 
@@ -141,8 +136,11 @@ int main(void)
   dm = dt;
   c = ct;
 
+while (1)
+  {
   // Encrypt
   HAL_TIM_Base_Start_IT(&htim6);
+  TIM6->CNT = 0;
   timer6_initial = __HAL_TIM_GET_COUNTER(&htim6);
   ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
   timer6_rem = __HAL_TIM_GET_COUNTER(&htim6);
@@ -168,22 +166,28 @@ int main(void)
   } else {
 	  timer_dec = timer7_rem;
   }
-  
 
   /* USER CODE END 2 */
+  float rec = 0.0;
+  int send = 50;
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
+  
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	HAL_UART_Transmit(&huart3, tx_buffer, 27, 10);
-	HAL_GPIO_WritePin(GPIOB, LD3_Pin, GPIO_PIN_SET);
-	HAL_Delay(100);
-	HAL_GPIO_WritePin(GPIOB, LD3_Pin, GPIO_PIN_RESET);
-	HAL_Delay(100);
+    HAL_GPIO_WritePin(GPIOB, LD3_Pin, GPIO_PIN_SET);
+    HAL_Delay(100);
+    HAL_GPIO_WritePin(GPIOB, LD3_Pin, GPIO_PIN_RESET);
+    HAL_Delay(100);
+    receive_serial(&rec, 4);
+    // send_serial(&send, 4);
+    // HAL_Delay(1000);
+    send_serial(&timer_dec, 4);
+    
+    HAL_Delay(100);
+		send_serial(&timer_enc, 4);
   }
   /* USER CODE END 3 */
 }

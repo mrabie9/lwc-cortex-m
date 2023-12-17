@@ -25,7 +25,8 @@
 #include <string.h>
 /* Private includes ----------------------------------------------------------*/
 UART_HandleTypeDef huart3;
-
+TIM_HandleTypeDef htim6;
+TIM_HandleTypeDef htim7;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -86,7 +87,7 @@ int main(void)
     float rec = 0;
 
 	while(1){
-      HAL_Delay(1000);
+      // HAL_Delay(1000);
       receive_serial(&rec, 4);
 		  send_serial(&msg, 4);
 	}

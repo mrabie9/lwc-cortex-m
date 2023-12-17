@@ -11,7 +11,7 @@ from datetime import datetime
 import platform
 import logging
 import traceback
-import numpy
+import numpy as np
 
 algorithm = "ascon128"
 exec_name = algorithm + ".elf"
@@ -44,9 +44,12 @@ def clearBuffer():
 
 	nucleo.flushInput()
 	nucleo.flushOutput()
-
+program = 1
 def start_board():
 	global countdown_to_reset
+	global program
+	if program == 0:
+		return
 
 	# make_log = subprocess.run("make -C C:\\WSD030\\m7_board\\m7_board\\Software\\" + algorithm, shell=True, capture_output=True, text=True) # TODO: review
 	# print(make_log.stdout,'\n',make_log)
@@ -87,14 +90,23 @@ def hex_to_int(f):
 		return struct.unpack("<I" ,f)[0]
 	return 999 # TODO: error
 	
+enc_data = []
+dec_data = []
+idx=0
+
 while(1):
 	try:
-		print("Sending: ", msg, end=' - ')
+		print("Sending: ", msg)
 		nucleo.write(float_to_hex(msg))
-		message = nucleo.read(4)
-		print("Received: ", hex_to_int(message), end='\r')
+		enc_data.append(hex_to_int(nucleo.read(4)))
+		print("Received Enc: ", enc_data[idx])
+		dec_data.append(hex_to_int(nucleo.read(4)))
+		# print("Received Dec: ", hex_to_int(dec_data[idx]), end='\r')
+		idx = idx + 1
 		msg += 1
 		if msg > 10:
+			print("Received Enc: ", enc_data)
+			print("Received Dec: ", dec_data)
 			break
 		time.sleep(1)
 	except Exception as e:
