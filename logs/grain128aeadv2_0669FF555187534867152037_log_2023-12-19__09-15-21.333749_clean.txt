@@ -1,0 +1,2 @@
+	[2023-12-19 09:15:58.839467 -> Error: Sent 0 but didn't get an aswer. Restarting board]
+[2023-12-19 09:16:06.576022 -> User annotation: ]

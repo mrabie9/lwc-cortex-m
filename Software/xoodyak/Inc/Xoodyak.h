@@ -13,7 +13,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 #define _Xoodyak_h_
 
 #include <stddef.h>
-#include "Xoodoo-SnP.h"
+// #include "Xoodoo-SnP.h"
 #include "Cyclist.h"
 #include "api.h"
 

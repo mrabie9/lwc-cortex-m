@@ -1,0 +1,2 @@
+	[2023-12-18 15:41:42.468475 -> Error: Sent 0 but didn't get an aswer. Restarting board]
+	[2023-12-18 15:41:59.681357 -> Error: Sent 0 but didn't get an aswer. Restarting board]

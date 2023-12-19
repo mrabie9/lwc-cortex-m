@@ -20,7 +20,8 @@ algorithm = 'AES'
 exec_name,n_results = ("AES.elf", 1)
 
 # Serial number and port
-sn, serial_port = ("066AFF574887534867083435", "/dev/tty.usbmodem11303") # TODO: Check
+# sn, serial_port = ("066AFF574887534867083435", "/dev/tty.usbmodem11303") # TODO: Check
+sn, serial_port = ("0669FF555187534867152037", "COM5") # TODO: Check
 
 #set the number of runs
 number_of_runs = 3
@@ -199,7 +200,7 @@ def sync():
 		start_board()
 		return 1
 	elif(hex_to_float(zero) != 0.0):
-		log_clean("Error: Sent 0 to start com but got "+ str(zero) + " back while starting com. Restarting com", 1);
+		log_clean("Error: Sent 0 to start com but got "+ str(zero) + " back while starting com. Restarting com", 1)
 		start_board()
 		return 1
 	else:

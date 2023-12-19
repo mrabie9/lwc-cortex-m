@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "main_aes": "c",
+        "aead.h": "c",
+        "ascon.h": "c",
+        "permutations.h": "c",
+        "printstate.h": "c"
+    }
+}

@@ -1,0 +1,8 @@
+	[2023-12-18 15:41:37.455444 -> Starting application]
+	[2023-12-18 15:41:37.455444 -> Sending zero]
+	[2023-12-18 15:41:37.455444 -> Trying to read a zero]
+	[2023-12-18 15:41:42.468475 -> Error: Sent 0 but didn't get an aswer. Restarting board]
+	[2023-12-18 15:41:54.681347 -> Starting application]
+	[2023-12-18 15:41:54.681347 -> Sending zero]
+	[2023-12-18 15:41:54.681347 -> Trying to read a zero]
+	[2023-12-18 15:41:59.681357 -> Error: Sent 0 but didn't get an aswer. Restarting board]

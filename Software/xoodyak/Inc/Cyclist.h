@@ -11,7 +11,7 @@ http://creativecommons.org/publicdomain/zero/1.0/
 
 #ifndef _Cyclist_h_
 #define _Cyclist_h_
-
+//#include "Xoodoo-SnP.h"
 #include <stdint.h>
 #include "align.h"
 
