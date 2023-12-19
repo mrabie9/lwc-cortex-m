@@ -215,7 +215,7 @@ for x in algorithms:
 	# Main loop
 	j = 0
 	crash = 0
-	for k in range(number_of_runs):
+	for k in range(1):
 		j += 1
 
 		try:
