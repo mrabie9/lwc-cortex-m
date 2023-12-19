@@ -30,7 +30,7 @@
 #define ENCRYPT(a, b, c, d, e, f, g, h, i) crypto_aead_encrypt(a, b, c, d, e, f, g, h, i)
 #define DECRYPT(a, b, c, d, e, f, g, h, i) crypto_aead_decrypt(a, b, c, d, e, f, g, h, i)
 
-#define MSG_SIZE INPUT_SIZE*4
+#define MSG_SIZE 32//INPUT_SIZE*4
 
 /* Private includes ----------------------------------------------------------*/
 UART_HandleTypeDef huart3;
@@ -185,7 +185,7 @@ int main(void)
     volatile unsigned char  key[CRYPTO_KEYBYTES] = {0xDEADBEEF, 0x01234567, 0x89ABCDEF, 0xDEADBEEF, 0xDEADBEEF, 0x01234567, 0x89ABCDEF, 0xDEADBEEF};
 #endif
   volatile unsigned char nonce[CRYPTO_NPUBBYTES] = {0};
-  // volatile unsigned char key[CRYPTO_KEYBYTES] = {0};
+  volatile unsigned char msg[MSG_SIZE] = {0};
   volatile uint64_t msglen = MSG_SIZE;// sizeof(text) / sizeof(unsigned char);
   volatile unsigned long long ctlen = 0;
   volatile unsigned char ct[MSG_SIZE + CRYPTO_ABYTES] = {0};
@@ -202,7 +202,7 @@ int main(void)
   k = key;
   npub = nonce;
   clen = &ctlen;
-  m = text;
+  m = msg;
   c = ct;
 
   double output;

@@ -14,7 +14,7 @@ import traceback
 
 
 # App name 
-algorithm = 'schwaemm256256v2'
+algorithm = 'xoodyak'
 
 # executable name, output size
 # exec_name,n_results = ("AES.elf", 1)

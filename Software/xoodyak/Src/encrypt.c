@@ -9,7 +9,7 @@ and related or neighboring rights to the source code in this file.
 http://creativecommons.org/publicdomain/zero/1.0/
 */
 
-#include "aead.h"
+#include "crypto_aead.h"
 #include "api.h"
 #include "Xoodyak.h"
 #include <string.h>
