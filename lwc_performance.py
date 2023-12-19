@@ -14,7 +14,8 @@ import traceback
 
 
 # App name 
-algorithm = 'xoodyak'
+algorithm = 'grain128aeadv2'
+wdir = r"C:\WSD030\m7_board\m7_board"
 
 # executable name, output size
 # exec_name,n_results = ("AES.elf", 1)
@@ -29,11 +30,11 @@ number_of_runs = 3
 countdown_to_reset = 5
 
 # Application runtime timeout
-apprun = 20
+apprun = 300
 
 def start_board():
 	global countdown_to_reset
-	prog_log = subprocess.run(r"C:\WSD030\m7_board\m7_board\openocd.sh " + algorithm, shell=True, capture_output=True, text=True) # TODO: review
+	prog_log = subprocess.run(wdir + "\openocd.sh " + algorithm, shell=True, capture_output=True, text=True) # TODO: review
 	if "Error" in prog_log.stdout or "Error" in prog_log.stderr or "Failed" in prog_log.stdout or "Failed" in prog_log.stderr:
 		print(prog_log.stdout, '\n', prog_log.stderr)
 		log_clean("Board error detected!", 1)
@@ -44,12 +45,6 @@ def start_board():
 	clearBuffer()
 	countdown_to_reset -= 1
 	time.sleep(.1)
-
-# Create log folder
-subprocess.run(r"mkdir C:\WSD030\m7_board\m7_board\logs", shell=True)
-
-register_log_full  = open("C:\WSD030\m7_board\m7_board\logs/"+ str(algorithm) + "_" + str(sn) + "_log_" + str(datetime.now()).replace(" ", "__").replace(":", "-") + "_full.txt", "w")
-register_log_clean = open("C:\WSD030\m7_board\m7_board\logs/"+ str(algorithm) + "_" + str(sn) + "_log_" + str(datetime.now()).replace(" ", "__").replace(":", "-") + "_clean.txt", "w")
 
 def signal_handler(signum, frame):
 	print("Catched Ctrl+c")
@@ -169,24 +164,6 @@ def clearBuffer():
 	nucleo.flushInput()
 	nucleo.flushOutput()
 
-
-
-try:
-	nucleo = serial.Serial(serial_port, 115200, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout = 5)
-except:
-	log_clean("Problem opening serial port")
-	register_log_full.close()
-	register_log_clean.close()
-	print(quit)
-	os._exit(16)
-
-start_board()
-
-print("Starting experiment")
-campaign_start_time = time.time()
-
-print(algorithm + " Runs: 0" , end='\r')
-
 def sync():
 	#Send 0
 	log_full("Sending zero", 1)
@@ -206,71 +183,100 @@ def sync():
 	else:
 		log_full("Got zero", 1)
 		return 0
+	
 
-# Main loop
-j = 0
-for k in range(number_of_runs):
-	j += 1
+# Create log folder
+subprocess.run(r"mkdir " + wdir + "\logs", shell=True)
+register_log_full  = open(wdir + "\logs/"+ str(algorithm) + "_" + str(sn) + "_log_" + str(datetime.now()).replace(" ", "__").replace(":", "-") + "_full.txt", "w")
+register_log_clean = open(wdir + "\logs/"+ str(algorithm) + "_" + str(sn) + "_log_" + str(datetime.now()).replace(" ", "__").replace(":", "-") + "_clean.txt", "w")
 
-	try:
-		if countdown_to_reset == 0:
-			os._exit(10)
+try:
+	nucleo = serial.Serial(serial_port, 115200, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout = 5)
+except:
+	log_clean("Problem opening serial port")
+	register_log_full.close()
+	register_log_clean.close()
+	print(quit)
+	os._exit(16)
 
-		# Sync with app
-		#print("\n\tSyncing with {0} - Run {1}".format(algorithm, j))
-		log_full("Starting application", 1)
+algorithms = ["AES", "ascon128", "ascon128a", "elephant160v2", "giftcofb128v1", "grain128aeadv2", "isapa128av20", "isapa128v20", "photonbeetleaead128rate128v1", "romulusn", "schwaemm256128v2", "schwaemm256256v2", "tinyjambu", "xoodyak"]
 
-		if sync() == 1:
-			continue
-				
-		#print("App running")
-#		time.sleep(apprun)
-		nucleo.timeout = apprun
-		# Wait app run
-		nucleo.read(4)
-		nucleo.timeout = 5
+for x in algorithms:
+	algorithm = x
+	register_log_full  = open(wdir + "\logs/"+ str(algorithm) + "_" + str(sn) + "_log_" + str(datetime.now()).replace(" ", "__").replace(":", "-") + "_full.txt", "w")
+	register_log_clean = open(wdir + "\logs/"+ str(algorithm) + "_" + str(sn) + "_log_" + str(datetime.now()).replace(" ", "__").replace(":", "-") + "_clean.txt", "w")
+	start_board()
 
-		# Sync with app
-		#print("Syncing to get case-study runtime")
-		log_full("Syncing to get case-study runtime",1)
-		
-		if sync() == 1:
-			continue
-		
-		nucleo.write(float_to_hex(0.0)) # Sync
-		runtime = nucleo.read(4)
-		if runtime == b'':
-			log_clean("Comm error: Did not receive application runtime ", 1)
-			crash += 1
+	print("Starting experiment")
+	campaign_start_time = time.time()
+
+	print(algorithm + " Runs: 0") #, end='\r')
+
+	# Main loop
+	j = 0
+	crash = 0
+	for k in range(number_of_runs):
+		j += 1
+
+		try:
+			if countdown_to_reset == 0:
+				os._exit(10)
+
+			# Sync with app
+			#print("\n\tSyncing with {0} - Run {1}".format(algorithm, j))
+			log_full("Starting application", 1)
+
+			if sync() == 1:
+				continue
+					
+			#print("App running")
+	#		time.sleep(apprun)
+			nucleo.timeout = apprun
+			# Wait app run
+			nucleo.read(4)
+			nucleo.timeout = 5
+
+			# Sync with app
+			#print("Syncing to get case-study runtime")
+			log_full("Syncing to get case-study runtime",1)
+			
+			if sync() == 1:
+				continue
+			
+			nucleo.write(float_to_hex(0.0)) # Sync
+			runtime = nucleo.read(4)
+			if runtime == b'':
+				log_clean("Comm error: Did not receive application runtime ", 1)
+				crash += 1
+				start_board()
+				continue
+			runtime = hex_to_float(runtime)
+			print("Runtime: %.2f s" % runtime)
+			log_clean("Runtime: %.2f s" % runtime, 1)
+			
+			# Get ouptput results
+			# ~ time.sleep(.05)
+			if sync() == 1:
+				continue
+			
+			nucleo.write(float_to_hex(0.0)) # Sync
+			output = hex_to_double(nucleo.read(8))
+					
+			print("Output: ", output)
+			log_clean("Output: " + str(output), 1)
+			countdown_to_reset = 5
+
+			# ~ print(algorithm + " Runs: " + str(j), end='\r')
+
+			time.sleep(.05)
+
+	#		print("---------------------------------------------------")
+		except Exception as e:
+			print("Shouldnt be here->", e)
 			start_board()
 			continue
-		runtime = hex_to_float(runtime)
-		print("Runtime: %.2f s" % runtime)
-		log_clean("Runtime: %.2f s" % runtime, 1)
-		
-		# Get ouptput results
-		# ~ time.sleep(.05)
-		if sync() == 1:
-			continue
-		
-		nucleo.write(float_to_hex(0.0)) # Sync
-		output = hex_to_double(nucleo.read(8))
-				
-		print("Output: ", output)
-		log_clean("Output: " + str(output), 1)
-		countdown_to_reset = 5
 
-		# ~ print(algorithm + " Runs: " + str(j), end='\r')
-
-		time.sleep(.05)
-
-#		print("---------------------------------------------------")
-	except Exception as e:
-		print("Shouldnt be here->", e)
-		start_board()
-		continue
-
-print("Experiment end")
-print("Campaign Time: ", round(time.time() - campaign_start_time,2), " s")
-print("\n" + algorithm + " Runs: " + str(j))
+	print("Experiment end")
+	print("Campaign Time: ", round(time.time() - campaign_start_time,2), " s")
+	print("\n" + algorithm + " Runs: " + str(j))
 # ~ time.sleep(2)
