@@ -14,7 +14,7 @@ import traceback
 
 
 # App name 
-algorithm = 'grain128aeadv2'
+algorithm = 'ascon128'
 wdir = r"C:\WSD030\m7_board\m7_board"
 
 # executable name, output size
@@ -199,8 +199,23 @@ except:
 	print(quit)
 	os._exit(16)
 
-algorithms = ["AES", "ascon128", "ascon128a", "elephant160v2", "giftcofb128v1", "grain128aeadv2", "isapa128av20", "isapa128v20", "photonbeetleaead128rate128v1", "romulusn", "schwaemm256128v2", "schwaemm256256v2", "tinyjambu", "xoodyak"]
+rebuild = False
+if rebuild:
+	print("Rebuilding All. Please wait...")
+	rebuild_log = subprocess.run(wdir + r"\rebuild_all.sh", shell=True, capture_output=True, text=True) # TODO: review
+	if "Error" in rebuild_log.stdout or "Error" in rebuild_log.stderr or "Failed" in rebuild_log.stdout or "Failed" in rebuild_log.stderr:
+		print(rebuild_log.stdout, '\n', rebuild_log.stderr)
+		log_clean("Compliation Error Detected!", 1)
+		register_log_full.close()
+		register_log_clean.close()
+		os._exit(10)
 
+f = open("exec_times.txt", "w") # clear file first
+f.close()
+f = open("exec_times.txt", "a")
+
+algorithms = ["AES", "ascon128", "ascon128a", "elephant160v2", "giftcofb128v1", "grain128aeadv2", "isapa128av20", "isapa128v20", "photonbeetleaead128rate128v1", "romulusn", "schwaemm256128v2", "schwaemm256256v2", "tinyjambu", "xoodyak"]
+# algorithms = ["ascon128"]
 for x in algorithms:
 	algorithm = x
 	register_log_full  = open(wdir + "\logs/"+ str(algorithm) + "_" + str(sn) + "_log_" + str(datetime.now()).replace(" ", "__").replace(":", "-") + "_full.txt", "w")
@@ -252,7 +267,10 @@ for x in algorithms:
 				continue
 			runtime = hex_to_float(runtime)
 			print("Runtime: %.2f s" % runtime)
-			log_clean("Runtime: %.2f s" % runtime, 1)
+			f.write(algorithm)
+			f.write(": \n")
+			f.write("\tRuntime: %.2fs\n\t" % runtime)
+			log_clean("Runtime: %.2fs" % runtime, 1)
 			
 			# Get ouptput results
 			# ~ time.sleep(.05)
@@ -277,6 +295,11 @@ for x in algorithms:
 			continue
 
 	print("Experiment end")
-	print("Campaign Time: ", round(time.time() - campaign_start_time,2), " s")
+	campagin_time = round(time.time() - campaign_start_time,2)
+	print("Campaign Time: ", campagin_time , " s")
+	f.write("Campaign Time: ")
+	f.write(str(campagin_time))
+	f.write("\n\n")
 	print("\n" + algorithm + " Runs: " + str(j))
 # ~ time.sleep(2)
+f.close()
