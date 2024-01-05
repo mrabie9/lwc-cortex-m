@@ -24,7 +24,7 @@ OBJCOPY = ${TRIPLE}-objcopy
 SZ 		= $(TRIPLE)-size
 
 ##### Compiler options #####
-CFLAGS = -g -T$(LINKER_SCRIPT) -Wall
+CFLAGS = -g -T$(LINKER_SCRIPT) -w
 CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m7
 CFLAGS += -mfloat-abi=soft --specs=nosys.specs
 

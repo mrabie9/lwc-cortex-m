@@ -1,12 +1,10 @@
-# Author: Jonas Gava
-# Author: Luciano Ost
+# Jonas Gava 
+# updated Luciano Ost
 
 ##### Project setup #####
 # Name of your current project
 PROJ_NAME = $(shell basename $(CURDIR))
-
-# R = reference version (without protection)
-SUFIX ?= R
+#~ PROJ_NAME = ascon128
 
 # Linker script for STM32xx Device 
 LINKER_SCRIPT = ../../Board/STM32F767ZITx_FLASH.ld
@@ -18,26 +16,21 @@ HAL_DIR = ../../Drivers/STM32F7xx_HAL_Driver
 ##### Arm Toolchain #####
 TRIPLE  = arm-none-eabi
 CC      = ${TRIPLE}-gcc
-#~ CC      = ${TRIPLE}-g++
+CLANG	= /soft64/cross/llvm/mitigation/clang_6.0.1/bin/clang
 LD      = ${TRIPLE}-ld
 AS      = ${TRIPLE}-as
 GDB 	= ${TRIPLE}-gdb
 OBJCOPY = ${TRIPLE}-objcopy
-
-CLANG_FOLDER = /soft64/cross/llvm/mitigation/clang_6.0.1/bin
-CLANG = $(CLANG_FOLDER)/clang
-LLC = $(CLANG_FOLDER)/llc
-CLANG_CFLAGS = -mlittle-endian -mthumb -mcpu=cortex-m7 -mfloat-abi=soft -O2
-
+SZ 		= $(TRIPLE)-size
 
 ##### Compiler options #####
-CCFLAGS = -g -T$(LINKER_SCRIPT) -Wall
-CCFLAGS += --specs=nosys.specs
+CFLAGS = -g -T$(LINKER_SCRIPT) -w
+CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m7
+CFLAGS += -mfloat-abi=soft --specs=nosys.specs
 
 ##### Project specific libraries #####
 SRC_FILES += $(wildcard Src/*.c)
-SRC_FILES += $(wildcard Src/*.cpp)
-CFLAGS = -IInc
+CFLAGS += -IInc
 
 ##### Drivers libraries and source code #####
 CFLAGS += -I$(CMSIS_DIR)/Include
@@ -47,11 +40,8 @@ SRC_FILES += ../../Startup/*
 SRC_FILES += $(HAL_DIR)/Src/*
 CFLAGS += -I$(HAL_DIR)/Inc
 
-CLANG_CFLAGS += $(CFLAGS) -IInc/CMSIS_5/CMSIS/DSP/Include -IInc/CMSIS_5/CMSIS/NN/Include -I/usr/lib/arm-none-eabi/include -fshort-enums
-CCFLAGS += $(CLANG_CFLAGS)
-
-#~ all: $(PROJ_NAME).bin $(PROJ_NAME).hex
-all: $(PROJ_NAME).elf
+all: $(PROJ_NAME).elf 
+#$(PROJ_NAME).bin $(PROJ_NAME).hex
 
 ##### Flash code to board #####
 flash:
@@ -63,21 +53,21 @@ disass: $(PROJ_NAME).elf
 	$(GDB) $^ -batch -ex 'disass /r $(FUNC)'
 
 clean:
-	rm -f *.elf *.o *.ll *.s
+	rm -f $(PROJ_NAME).bin $(PROJ_NAME).hex $(PROJ_NAME).elf $(PROJ_NAME).o
 
-$(PROJ_NAME).elf: $(SRC_FILES) $(PROJ_NAME).c
-	$(CC) $(CCFLAGS) -o $@ $^ -DSTM32F767xx -Wl,--print-memory-usage
-	cp $(PROJ_NAME).elf ../
+$(PROJ_NAME).elf: $(SRC_FILES) 
+	$(CC) $(CFLAGS) -o $@ $^ -DSTM32F767xx -Wl,--print-memory-usage
+	$(SZ) $@
 
-#~ $(PROJ_NAME)-$(SUFIX).s: $(PROJ_NAME).ll
-#~ 	$(LLC) -O2 $^ -o $@ $(EXTRA_FLAGS)
+#$(PROJ_NAME).elf: $(SRC_FILES) $(PROJ_NAME).o
+#	$(CC) $(CFLAGS) -o $@ $^ #Src/$(PROJ_NAME)-$(SUFIX).o
 
-#~ $(PROJ_NAME).ll: $(PROJ_NAME).c
-#~ 	$(CLANG) --target=$(TRIPLE) $(CLANG_CFLAGS) -S -emit-llvm $^ -o $@
+#$(PROJ_NAME).o: $(PROJ_NAME).c
+#	$(CLANG) --target=arm-none-eabi -mcpu=cortex-m4 -mfloat-abi=soft -mthumb -mlittle-endian -IInc -I/soft64/cross/gcc/gcc-arm-none-eabi-10.3/arm-none-eabi/include/ -fshort-enums -DKEY=$(KEY) -DDEBUG $(EXTRA_FLAGS) -c -o $@ $<
 
-$(PROJ_NAME).hex: $(PROJ_NAME).elf
-	$(OBJCOPY) -O ihex $(PROJ_NAME).elf $@
+#~ $(PROJ_NAME).hex: $(PROJ_NAME).elf
+#~ 	$(OBJCOPY) -O ihex $(PROJ_NAME).elf $@
 
-$(PROJ_NAME).bin: $(PROJ_NAME).elf
-	$(OBJCOPY) -O binary $^ $@
+#~ $(PROJ_NAME).bin: $(PROJ_NAME).elf
+#~ 	$(OBJCOPY) -O binary $^ $@
 
