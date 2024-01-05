@@ -115,7 +115,7 @@ KIN1_DWT_CYCCNT
 
 uint32_t cycles; /* number of cycles */
 
-
+int freq;
 void send_app_runtime(){
 	float time, discard;
 	
@@ -125,7 +125,7 @@ void send_app_runtime(){
 	receive_serial(&discard, 4);
 	
 	// Send app runtime (seconds)
-	time = (float)cycles/80000000; // L476 M4
+	time = (float)cycles/freq; // L476 M4
 	send_serial(&time, 4);	
 }
 
@@ -173,6 +173,7 @@ int main(void)
     
     KIN1_InitCycleCounter(); /* enable DWT hardware */
     KIN1_EnableLockAccess();
+	freq = HAL_RCC_GetSysClockFreq();
 
     double output;
     
