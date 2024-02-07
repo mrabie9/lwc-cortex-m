@@ -202,7 +202,7 @@ except:
 	print(quit)
 	os._exit(16)
 
-rebuild = False
+rebuild = 1
 rebuild_output_filename = wdir + r"\rebuild_output_" + data_size
 if rebuild:
 	print("Rebuilding All. Please wait...")

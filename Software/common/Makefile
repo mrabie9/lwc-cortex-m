@@ -1,9 +1,11 @@
 # Jonas Gava 
 # updated Luciano Ost
+# 2023-24 update by Mohamed Rabie
 
 ##### Project setup #####
 # Name of your current project
 PROJ_NAME = $(shell basename $(CURDIR))
+BUILD_DIR = ../../Build
 #~ PROJ_NAME = ascon128
 
 # Linker script for STM32xx Device 
@@ -38,7 +40,9 @@ CFLAGS += -I$(CMSIS_DIR)/Device/ST/STM32F7xx/Include
 
 SRC_FILES += ../../Startup/*
 SRC_FILES += $(HAL_DIR)/Src/*
+SRC_FILES += ../Common/Src/*
 CFLAGS += -I$(HAL_DIR)/Inc
+CFLAGS += -I../Common/Inc
 
 all: $(PROJ_NAME).elf 
 #$(PROJ_NAME).bin $(PROJ_NAME).hex
@@ -53,11 +57,11 @@ disass: $(PROJ_NAME).elf
 	$(GDB) $^ -batch -ex 'disass /r $(FUNC)'
 
 clean:
-	rm -f $(PROJ_NAME).bin $(PROJ_NAME).hex $(PROJ_NAME).elf $(PROJ_NAME).o
+	rm -f $(BUILD_DIR)/$(PROJ_NAME).bin $(BUILD_DIR)/$(PROJ_NAME).hex $(BUILD_DIR)/$(PROJ_NAME).elf $(BUILD_DIR)/$(PROJ_NAME).o
 
 $(PROJ_NAME).elf: $(SRC_FILES) 
-	$(CC) $(CFLAGS) -o $@ $^ -DSTM32F767xx -Wl,--print-memory-usage
-	$(SZ) $@
+	$(CC) $(CFLAGS) -o $(BUILD_DIR)/$@ $^ -DSTM32F767xx -Wl,--print-memory-usage
+	$(SZ) $(BUILD_DIR)/$@
 
 #$(PROJ_NAME).elf: $(SRC_FILES) $(PROJ_NAME).o
 #	$(CC) $(CFLAGS) -o $@ $^ #Src/$(PROJ_NAME)-$(SUFIX).o

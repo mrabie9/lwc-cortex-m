@@ -3,7 +3,7 @@
 
 ocddir="C:/OpenOCD/share/openocd/scripts"
 app_name="$1" # pass app name on CLI
-wdir="C:/WSD030/m7_board/m7_board/Software/$app_name" # directory of project folder
+wdir="C:/WSD030/m7_board/m7_board/Build" # directory of project folder
 elf_file="$app_name.elf"
 
 echo

@@ -1,9 +1,11 @@
 # Jonas Gava 
 # updated Luciano Ost
+# 2023-24 update by Mohamed Rabie
 
 ##### Project setup #####
 # Name of your current project
 PROJ_NAME = $(shell basename $(CURDIR))
+BUILD_DIR = ../../Build
 #~ PROJ_NAME = ascon128
 
 # Linker script for STM32xx Device 
@@ -56,8 +58,8 @@ clean:
 	rm -f $(PROJ_NAME).bin $(PROJ_NAME).hex $(PROJ_NAME).elf $(PROJ_NAME).o
 
 $(PROJ_NAME).elf: $(SRC_FILES) 
-	$(CC) $(CFLAGS) -o $@ $^ -DSTM32F767xx -Wl,--print-memory-usage
-	$(SZ) $@
+	$(CC) $(CFLAGS) -o $(BUILD_DIR)/$@ $^ -DSTM32F767xx -Wl,--print-memory-usage
+	$(SZ) $(BUILD_DIR)/$@
 
 #$(PROJ_NAME).elf: $(SRC_FILES) $(PROJ_NAME).o
 #	$(CC) $(CFLAGS) -o $@ $^ #Src/$(PROJ_NAME)-$(SUFIX).o
