@@ -38,7 +38,9 @@ CFLAGS += -I$(CMSIS_DIR)/Device/ST/STM32F7xx/Include
 
 SRC_FILES += ../../Startup/*
 SRC_FILES += $(HAL_DIR)/Src/*
+SRC_FILES += ../Common/Src/*
 CFLAGS += -I$(HAL_DIR)/Inc
+CFLAGS += -I../Common/Inc
 
 all: $(PROJ_NAME).elf 
 #$(PROJ_NAME).bin $(PROJ_NAME).hex

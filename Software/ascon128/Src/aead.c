@@ -1,4 +1,8 @@
-#include <aead.h>
+#include <crypto_aead.h>
+#include <ascon.h>
+#include <permutations.h>
+#include <printstate.h>
+#include <word.h>
 
 int crypto_aead_encrypt(unsigned char* c, unsigned long long* clen,
                         const unsigned char* m, unsigned long long mlen,

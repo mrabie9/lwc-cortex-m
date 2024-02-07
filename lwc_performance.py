@@ -14,7 +14,10 @@ import traceback
 
 
 # App name 
-algorithm = 'ascon128'
+algorithm = ''
+algorithms = ["AES", "ascon128", "ascon128a", "elephant160v2", "giftcofb128v1", "grain128aeadv2", "isapa128av20", "isapa128v20", "photonbeetleaead128rate128v1", "romulusn", "schwaemm256128v2", "schwaemm256256v2", "tinyjambu", "xoodyak"]
+# algorithms = ["tinyjambu"]
+data_size = "128B"
 wdir = r"C:\WSD030\m7_board\m7_board"
 
 # executable name, output size
@@ -200,9 +203,10 @@ except:
 	os._exit(16)
 
 rebuild = False
+rebuild_output_filename = wdir + r"\rebuild_output_" + data_size
 if rebuild:
 	print("Rebuilding All. Please wait...")
-	rebuild_log = subprocess.run(wdir + r"\rebuild_all.sh", shell=True, capture_output=True, text=True) # TODO: review
+	rebuild_log = subprocess.run(wdir + r"\rebuild_all.sh " + rebuild_output_filename, shell=True, capture_output=True, text=True) # TODO: review
 	if "Error" in rebuild_log.stdout or "Error" in rebuild_log.stderr or "Failed" in rebuild_log.stdout or "Failed" in rebuild_log.stderr:
 		print(rebuild_log.stdout, '\n', rebuild_log.stderr)
 		log_clean("Compliation Error Detected!", 1)
@@ -210,12 +214,14 @@ if rebuild:
 		register_log_clean.close()
 		os._exit(10)
 
-f = open("exec_times.txt", "w") # clear file first
+filename = wdir + "\exec_times_" + data_size + ".txt"
+print(filename)
+f = open(filename, "w") # clear file first
 f.close()
-f = open("exec_times.txt", "a")
+f = open(filename, "a")
+if f.closed:
+	print("File not open!!")
 
-algorithms = ["AES", "ascon128", "ascon128a", "elephant160v2", "giftcofb128v1", "grain128aeadv2", "isapa128av20", "isapa128v20", "photonbeetleaead128rate128v1", "romulusn", "schwaemm256128v2", "schwaemm256256v2", "tinyjambu", "xoodyak"]
-# algorithms = ["ascon128"]
 for x in algorithms:
 	algorithm = x
 	register_log_full  = open(wdir + "\logs/"+ str(algorithm) + "_" + str(sn) + "_log_" + str(datetime.now()).replace(" ", "__").replace(":", "-") + "_full.txt", "w")
@@ -266,10 +272,10 @@ for x in algorithms:
 				start_board()
 				continue
 			runtime = hex_to_float(runtime)
-			print("Runtime: %.2f s" % runtime)
+			print("Runtime: %f s" % runtime)
 			f.write(algorithm)
 			f.write(": \n")
-			f.write("\tRuntime: %.2fs\n\t" % runtime)
+			f.write("\tRuntime:\t\t%f s\n\t" % runtime)
 			log_clean("Runtime: %.2fs" % runtime, 1)
 			
 			# Get ouptput results
@@ -299,6 +305,7 @@ for x in algorithms:
 	print("Campaign Time: ", campagin_time , " s")
 	f.write("Campaign Time: ")
 	f.write(str(campagin_time))
+	f.write(" s")
 	f.write("\n\n")
 	print("\n" + algorithm + " Runs: " + str(j))
 # ~ time.sleep(2)

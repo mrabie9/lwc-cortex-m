@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <crypto_aead.h>
+#include <api.h>
 
 #define ENCRYPT(a, b, c, d, e, f, g, h, i) crypto_aead_encrypt(a, b, c, d, e, f, g, h, i)
 #define DECRYPT(a, b, c, d, e, f, g, h, i) crypto_aead_decrypt(a, b, c, d, e, f, g, h, i)
@@ -183,7 +184,7 @@ int main(void)
 
 #if CRYPTO_KEYBYTES==16
     volatile unsigned char key[CRYPTO_KEYBYTES] = {0xDEADBEEF, 0x01234567, 0x89ABCDEF, 0xDEADBEEF};
-#elif 
+#else 
     volatile unsigned char  key[CRYPTO_KEYBYTES] = {0xDEADBEEF, 0x01234567, 0x89ABCDEF, 0xDEADBEEF, 0xDEADBEEF, 0x01234567, 0x89ABCDEF, 0xDEADBEEF};
 #endif
   volatile unsigned char nonce[CRYPTO_NPUBBYTES] = {0};
@@ -223,8 +224,6 @@ int main(void)
     output = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
 
     cycles = KIN1_GetCycleCounter(); /* get cycle counter */
-    //~ printf("App Runtime: %.2f s\n", (float)cycles/80000000);
-    //~ printf("Checksum: %f \n", outputchecksum);
 
     send_app_runtime();
 
