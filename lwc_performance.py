@@ -15,9 +15,9 @@ import traceback
 
 # App name 
 algorithm = ''
-algorithms = ["AES", "ascon128", "ascon128a", "elephant160v2", "giftcofb128v1", "grain128aeadv2", "isapa128av20", "isapa128v20", "photonbeetleaead128rate128v1", "romulusn", "schwaemm256128v2", "schwaemm256256v2", "tinyjambu", "xoodyak"]
-# algorithms = ["tinyjambu"]
-data_size = "128B"
+#algorithms = ["AES", "ascon128", "ascon128a", "elephant160v2", "giftcofb128v1", "grain128aeadv2", "isapa128av20", "isapa128v20", "photonbeetleaead128rate128v1", "romulusn", "schwaemm256128v2", "schwaemm256256v2", "tinyjambu", "xoodyak"]
+algorithms = ["ascon128"]
+data_size = "12kB"
 wdir = r"C:\WSD030\m7_board\m7_board"
 
 # executable name, output size
@@ -25,8 +25,15 @@ wdir = r"C:\WSD030\m7_board\m7_board"
 
 # Serial number and port
 # sn, serial_port = ("066AFF574887534867083435", "/dev/tty.usbmodem11303") # TODO: Check
-sn, serial_port = ("0669FF555187534867152037", "COM5") # TODO: Check
+sn, serial_port = ("0669FF555187534867152037", "COM8") # TODO: Check
 
+board = "m7"
+
+if board == "m7":
+	serial_port = "COM5"
+else:
+	serial_port="COM8"
+	
 #set the number of runs
 number_of_runs = 3
 
@@ -37,7 +44,7 @@ apprun = 300
 
 def start_board():
 	global countdown_to_reset
-	prog_log = subprocess.run(wdir + "\openocd.sh " + algorithm, shell=True, capture_output=True, text=True) # TODO: review
+	prog_log = subprocess.run(wdir + "\openocd_" + board + ".sh " + algorithm, shell=True, capture_output=True, text=True) # TODO: review
 	if "Error" in prog_log.stdout or "Error" in prog_log.stderr or "Failed" in prog_log.stdout or "Failed" in prog_log.stderr:
 		print(prog_log.stdout, '\n', prog_log.stderr)
 		log_clean("Board error detected!", 1)
@@ -199,10 +206,11 @@ except:
 	log_clean("Problem opening serial port")
 	register_log_full.close()
 	register_log_clean.close()
-	print(quit)
+	print("quit")
 	os._exit(16)
 
-rebuild = 1
+
+rebuild = 0
 rebuild_output_filename = wdir + r"\rebuild_output_" + data_size
 if rebuild:
 	print("Rebuilding All. Please wait...")
@@ -214,7 +222,7 @@ if rebuild:
 		register_log_clean.close()
 		os._exit(10)
 
-filename = wdir + "\exec_times_" + data_size + ".txt"
+filename = wdir + "\exec_times_" + board + "_" + data_size + ".txt"
 print(filename)
 f = open(filename, "w") # clear file first
 f.close()
@@ -268,6 +276,7 @@ for x in algorithms:
 			runtime = nucleo.read(4)
 			if runtime == b'':
 				log_clean("Comm error: Did not receive application runtime ", 1)
+				print("Comm err")
 				crash += 1
 				start_board()
 				continue
