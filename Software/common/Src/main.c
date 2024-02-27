@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <crypto_aead.h>
-#include <api.h>
+// #include <api.h>
 
 #define ENCRYPT(a, b, c, d, e, f, g, h, i) crypto_aead_encrypt(a, b, c, d, e, f, g, h, i)
 #define DECRYPT(a, b, c, d, e, f, g, h, i) crypto_aead_decrypt(a, b, c, d, e, f, g, h, i)
