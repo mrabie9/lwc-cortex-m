@@ -33,6 +33,9 @@
 
 #define MSG_SIZE INPUT_SIZE*4
 
+#define POWER_CONS
+#define N_LOOP 1
+
 /* Private includes ----------------------------------------------------------*/
 UART_HandleTypeDef huart3;
 TIM_HandleTypeDef htim6;
@@ -207,31 +210,43 @@ int main(void)
   clen = &ctlen;
   m = text;
   c = ct;
-
+	
+// HAL_Delay(2000);
   double output;
+      //output = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
 
   while (1)
   {
+	#ifdef POWER_CONS
+		
+		for(int i=0;i<N_LOOP;i++)
+			output = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
+		HAL_Delay(1000);
 
-    // Sync before app execution
-    sync();
 
-    KIN1_ResetCycleCounter();  /* reset cycle counter */
-    KIN1_EnableCycleCounter(); /* start counting */
+	#else
 
-    // Start application
-    //~ printf("Starting App\n");
-    output = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
+		// Sync before app execution
+		sync();
 
-    cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+		KIN1_ResetCycleCounter();  /* reset cycle counter */
+		KIN1_EnableCycleCounter(); /* start counting */
 
-    send_app_runtime();
+		// Start application
+		//~ printf("Starting App\n");
+		output = DECRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
 
-    // Send output
-    send_output(output);
-    //~ HAL_Delay(1000);
+		cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+
+		send_app_runtime();
+
+		// Send output
+		send_output(output);
+		//~ HAL_Delay(1000);
+	
+	#endif
   }
-  KIN1_DisableCycleCounter();
+   KIN1_DisableCycleCounter();
 }
 
 /**

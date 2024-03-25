@@ -16,7 +16,7 @@ import traceback
 # App name 
 algorithm = ''
 #algorithms = ["AES", "ascon128", "ascon128a", "elephant160v2", "giftcofb128v1", "grain128aeadv2", "isapa128av20", "isapa128v20", "photonbeetleaead128rate128v1", "romulusn", "schwaemm256128v2", "schwaemm256256v2", "tinyjambu", "xoodyak"]
-algorithms = ["ascon128"]
+algorithms = ["AES"]
 data_size = "12kB"
 wdir = r"C:\WSD030\m7_board\m7_board"
 
@@ -25,14 +25,10 @@ wdir = r"C:\WSD030\m7_board\m7_board"
 
 # Serial number and port
 # sn, serial_port = ("066AFF574887534867083435", "/dev/tty.usbmodem11303") # TODO: Check
-sn, serial_port = ("0669FF555187534867152037", "COM8") # TODO: Check
+sn, serial_port = ("0669FF555187534867152037", "COM5") # TODO: Check
 
 board = "m7"
 
-if board == "m7":
-	serial_port = "COM5"
-else:
-	serial_port="COM8"
 	
 #set the number of runs
 number_of_runs = 3

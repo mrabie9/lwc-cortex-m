@@ -20,8 +20,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "data.h"
 #include "AES.h"
-//~ #include "Data.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -180,7 +180,7 @@ int main(void)
 	while(1){
         
         // Sync before app execution
-        sync();
+         sync();
         
 		KIN1_ResetCycleCounter(); /* reset cycle counter */
 		KIN1_EnableCycleCounter(); /* start counting */
@@ -188,6 +188,7 @@ int main(void)
         // Start application
 		//~ printf("Starting App\n");
         output = app_main(text);
+		//HAL_Delay(1000);
         
         cycles = KIN1_GetCycleCounter(); /* get cycle counter */
         //~ printf("App Runtime: %.2f s\n", (float)cycles/80000000);

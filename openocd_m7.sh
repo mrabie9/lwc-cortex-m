@@ -7,7 +7,7 @@ wdir="C:/WSD030/m7_board/m7_board/Build" # directory of project folder
 elf_file="$app_name.elf"
 
 echo
-openocd -f C:/WSD030/m7_board/m7_board/Board/board.cfg -f C:/WSD030/m7_board/m7_board/Board/stm32f7discovery.cfg -c "program $wdir/$elf_file verify reset exit"
+openocd -f C:/WSD030/m7_board/m7_board/Board/board.cfg -f C:/WSD030/m7_board/m7_board/Board/stm32f7discovery.cfg -c "program $wdir/$elf_file verify reset exit" #-c "reset init"
 
 echo
-# $SHELL #(prevent shell from auto closing)
+#$SHELL #(prevent shell from auto closing)

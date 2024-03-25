@@ -129,7 +129,7 @@ static void ShuffleXOR(
 
 	uint8_t OuterState_part1_ROTR1[RATE_INBYTES / 2] = { 0 };
 	size_t i;
-
+	
 	ROTR1(OuterState_part1_ROTR1, OuterState_part1, RATE_INBYTES / 2);
 
 	i = 0;

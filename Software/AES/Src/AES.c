@@ -9,6 +9,7 @@
 //-----------------------------------------------------------------------------
 
 //~ #include "common.h"
+#include "data.h"
 #include "AES.h"
 
 //-----------------------------------------------------------------------------
@@ -307,8 +308,7 @@ InvShiftRows(void) {
 }
 
 // Cipher is the main function that encrypts the PlainText.
-static void
-Cipher(void) {
+static void Cipher(void) {
     uint8_t round = 0;
 
     // Add the First round key to the state before starting the rounds.
@@ -331,8 +331,7 @@ Cipher(void) {
     AddRoundKey(Nr);
 }
 
-static void
-InvCipher(void) {
+static void InvCipher(void) {
     uint8_t round = 0;
 
     // Add the First round key to the state before starting the rounds.
@@ -429,87 +428,20 @@ crypt_aes(int id, int hw_sw, uint32_t* text) {
         //~ key[7] = 0xDEADBEEF;
     
         // Write CRYPT_PLAN
-        switch (i%2) {
-            case 0 : plan[0] = text[4*i+0];  //AES-128 - ENC
-					 plan[1] = text[4*i+1];  //AES-128 - ENC
-					 plan[2] = text[4*i+2];  //AES-128 - ENC
-					 plan[3] = text[4*i+3]; break; //AES-128 - ENC
-					 
-            case 1 : plan[0] = text[4*i+0];  //AES-128 - DEC
-					 plan[1] = text[4*i+1];  //AES-128 - DEC
-					 plan[2] = text[4*i+2];  //AES-128 - DEC
-					 plan[3] = text[4*i+3]; break; //AES-128 - DEC
-        }
+		plan[0] = text[4*i+0];  //AES-128 - ENC
+		plan[1] = text[4*i+1];  //AES-128 - ENC
+		plan[2] = text[4*i+2];  //AES-128 - ENC
+		plan[3] = text[4*i+3]; 
 
         // Write CRYPT_CONFIG
-        crypt_config[0] = (i+1) % 2; //0: dec, 1: enc (Enc_Dec)
+        crypt_config[0] = 0; //0: dec, 1: enc (Enc_Dec)
         crypt_config[1] = 1; //1: 128 bits (Plan Size)
         crypt_config[2] = 0; //0: 128 bits, 1: 192 bits, 2: 256 bits (Key Size)
         crypt_config[3] = 4; //4: Number of words in the message
         crypt_config[4] = 0; //0: AES (algorithm)
 
-        // Call MappCryptography
-        //~ MappPrintf(id, PRINT_STR, (void *)"Call MappCryptography ");
-        //~ timer = SnifferReadIndex();
-        //~ if (hw_sw) {
-            //~ MappCryptography(key, plan, cipher, crypt_config); // Hardware Accelerator
-        //~ }
-        //~ else {
-            aes_ecb(key, plan, cipher, crypt_config); // C Application
-        //~ }
-        //~ timer = SnifferReadIndex();
+        aes_ecb(key, plan, cipher, crypt_config); // C Application
 
-        // Read CRYPT_CIPHER
-        //~ MappPrintf(id, PRINT_HEX, (void *)cipher[0]);
-        //~ switch (i) {
-            //~ case 0 : if (cipher[0] != 0x237549D4) error = 1; break; //AES-128 - ENC
-            //~ case 1 : if (cipher[0] != 0xA5A5A5A5) error = 1; break; //AES-128 - DEC
-            //~ case 2 : if (cipher[0] != 0xEBB4CD9E) error = 1; break; //AES-192 - ENC
-            //~ case 3 : if (cipher[0] != 0xA5A5A5A5) error = 1; break; //AES-192 - DEC
-            //~ case 4 : if (cipher[0] != 0x206BF119) error = 1; break; //AES-256 - ENC
-            //~ case 5 : if (cipher[0] != 0xA5A5A5A5) error = 1; break; //AES-256 - DEC
-        //~ }
-        //~ MappPrintf(id, PRINT_HEX, (void *)cipher[1]);
-        //~ switch (i) {
-            //~ case 0 : if (cipher[1] != 0xCDCEA7BE) error = 1; break; //AES-128 - ENC
-            //~ case 1 : if (cipher[1] != 0x01234567) error = 1; break; //AES-128 - DEC
-            //~ case 2 : if (cipher[1] != 0xDA7CBDE0) error = 1; break; //AES-192 - ENC
-            //~ case 3 : if (cipher[1] != 0x01234567) error = 1; break; //AES-192 - DEC
-            //~ case 4 : if (cipher[1] != 0x7A085AC8) error = 1; break; //AES-256 - ENC
-            //~ case 5 : if (cipher[1] != 0x01234567) error = 1; break; //AES-256 - DEC
-        //~ }
-        //~ MappPrintf(id, PRINT_HEX, (void *)cipher[2]);
-        //~ switch (i) {
-            //~ case 0 : if (cipher[2] != 0x0FE7D162) error = 1; break; //AES-128 - ENC
-            //~ case 1 : if (cipher[2] != 0xFEDCBA98) error = 1; break; //AES-128 - DEC
-            //~ case 2 : if (cipher[2] != 0x9E520F4C) error = 1; break; //AES-192 - ENC
-            //~ case 3 : if (cipher[2] != 0xFEDCBA98) error = 1; break; //AES-192 - DEC
-            //~ case 4 : if (cipher[2] != 0xB31B2AD0) error = 1; break; //AES-256 - ENC
-            //~ case 5 : if (cipher[2] != 0xFEDCBA98) error = 1; break; //AES-256 - DEC
-        //~ }
-        //~ MappPrintf(id, PRINT_HEX, (void *)cipher[3]);
-        //~ switch (i) {
-            //~ case 0 : if (cipher[3] != 0xCC9161D3) error = 1; break; //AES-128 - ENC
-            //~ case 1 : if (cipher[3] != 0x5A5A5A5A) error = 1; break; //AES-128 - DEC
-            //~ case 2 : if (cipher[3] != 0x54BE5A98) error = 1; break; //AES-192 - ENC
-            //~ case 3 : if (cipher[3] != 0x5A5A5A5A) error = 1; break; //AES-192 - DEC
-            //~ case 4 : if (cipher[3] != 0x4843FFC1) error = 1; break; //AES-256 - ENC
-            //~ case 5 : if (cipher[3] != 0x5A5A5A5A) error = 1; break; //AES-256 - DEC
-        //~ }
-
-        //~ if (error == 1) {
-            //~ MappPrintf(id, PRINT_STR, (void *)"CRYPT: ERROR!!! "); 
-        //~ }
-        //~ else {
-            //~ switch (i) {
-                //~ case 0 : MappPrintf(id, PRINT_STR, (void *)"AES-128 (ENC): OK "); break; //AES-128 - ENC
-                //~ case 1 : MappPrintf(id, PRINT_STR, (void *)"AES-128 (DEC): OK "); break; //AES-128 - DEC
-                //~ case 2 : MappPrintf(id, PRINT_STR, (void *)"AES-192 (ENC): OK "); break; //AES-192 - ENC
-                //~ case 3 : MappPrintf(id, PRINT_STR, (void *)"AES-192 (DEC): OK "); break; //AES-192 - DEC
-                //~ case 4 : MappPrintf(id, PRINT_STR, (void *)"AES-256 (ENC): OK "); break; //AES-256 - ENC
-                //~ case 5 : MappPrintf(id, PRINT_STR, (void *)"AES-256 (DEC): OK "); break; //AES-256 - DEC
-            //~ }
-        //~ }
 		//~ printf("%08x %08x %08x %08x\n", cipher[0], cipher[1], cipher[2], cipher[3]);
         output += cipher[0];
 		output += cipher[1];
