@@ -2,3 +2,5 @@ logs/*
 *.txt
 Build/*
 .vscode/*
+.__pycache__/*
+Data/Power/'stmp files'
