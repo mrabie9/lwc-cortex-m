@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PowerMonitorDataLog>
+  <Config>
+    <PMSWVersion>
+      <Value />
+    </PMSWVersion>
+    <PowerState>
+      <Value>off</Value>
+    </PowerState>
+    <FirmwareVersion>
+      <Value>V3PWR V4.J3.B1.P4</Value>
+    </FirmwareVersion>
+    <Date>
+      <Value>Mar 29, 2024 2:54:33 PM</Value>
+    </Date>
+    <Description>
+      <Value />
+    </Description>
+    <Voltage>
+      <Value>3300</Value>
+    </Voltage>
+    <Voltage>
+      <Unit>mV</Unit>
+    </Voltage>
+    <AcquisitionTime>
+      <Value>0</Value>
+    </AcquisitionTime>
+    <AcquisitionTime>
+      <Unit>s</Unit>
+    </AcquisitionTime>
+    <Frequency>
+      <Value>100000</Value>
+    </Frequency>
+    <Frequency>
+      <Unit>Hz</Unit>
+    </Frequency>
+    <Threshold>
+      <Value>1000</Value>
+    </Threshold>
+    <Threshold>
+      <Unit>microA</Unit>
+    </Threshold>
+    <Source>
+      <Value>sw</Value>
+    </Source>
+    <Delay>
+      <Value>1</Value>
+    </Delay>
+    <Delay>
+      <Unit>ms</Unit>
+    </Delay>
+    <DataFormat>
+      <Value>bin_hexa</Value>
+    </DataFormat>
+    <Output>
+      <Value>current</Value>
+    </Output>
+    <FunctionalMode>
+      <Value>optim</Value>
+    </FunctionalMode>
+  </Config>
+  <Datas>
+    <filename1 lastTimestamp="1000.0" firstTimestamp="0.01" average="43668.63586425781" min="42221.0693359375" max="45410.15625" energy="144106.49835205078" name="2024_03_29_14_54_33_1_rawfile_1.csv" />
+    <filename2 lastTimestamp="2000.0" firstTimestamp="1000.01" average="43685.24719238281" min="42175.29296875" max="45333.8623046875" energy="144161.31573486328" name="2024_03_29_14_54_33_1_rawfile_2.csv" />
+    <filename3 lastTimestamp="3000.0" firstTimestamp="2000.01" average="43697.262268066406" min="42221.0693359375" max="45379.638671875" energy="144200.96548461914" name="2024_03_29_14_54_33_1_rawfile_3.csv" />
+    <filename4 lastTimestamp="4000.0" firstTimestamp="3000.01" average="43699.7477722168" min="42221.0693359375" max="45379.638671875" energy="144209.16764831543" name="2024_03_29_14_54_33_1_rawfile_4.csv" />
+    <filename5 lastTimestamp="5000.0" firstTimestamp="4000.01" average="44688.870849609375" min="42251.5869140625" max="47042.8466796875" energy="147473.27380371094" name="2024_03_29_14_54_33_1_rawfile_5.csv" />
+    <filename6 lastTimestamp="6000.0" firstTimestamp="5000.01" average="45088.365325927734" min="43853.759765625" max="46585.0830078125" energy="148791.60557556152" name="2024_03_29_14_54_33_1_rawfile_6.csv" />
+    <filename7 lastTimestamp="7000.0" firstTimestamp="6000.01" average="44104.18472290039" min="42175.29296875" max="46615.6005859375" energy="145543.8095855713" name="2024_03_29_14_54_33_1_rawfile_7.csv" />
+    <filename8 lastTimestamp="8000.0" firstTimestamp="7000.01" average="43703.70040893555" min="42297.36328125" max="45379.638671875" energy="144222.2113494873" name="2024_03_29_14_54_33_1_rawfile_8.csv" />
+    <filename9 lastTimestamp="9000.0" firstTimestamp="8000.01" average="43712.48809814453" min="42221.0693359375" max="45379.638671875" energy="144251.21072387695" name="2024_03_29_14_54_33_1_rawfile_9.csv" />
+    <filename10 lastTimestamp="10000.0" firstTimestamp="9000.01" average="43716.94763183594" min="42297.36328125" max="45379.638671875" energy="144265.9271850586" name="2024_03_29_14_54_33_1_rawfile_10.csv" />
+    <filename11 lastTimestamp="11000.0" firstTimestamp="10000.01" average="43729.85870361328" min="42297.36328125" max="45410.15625" energy="144308.53372192383" name="2024_03_29_14_54_33_1_rawfile_11.csv" />
+    <filename12 lastTimestamp="12000.0" firstTimestamp="11000.01" average="43730.196838378906" min="42251.5869140625" max="45379.638671875" energy="144309.6495666504" name="2024_03_29_14_54_33_1_rawfile_12.csv" />
+    <filename13 lastTimestamp="13000.0" firstTimestamp="12000.01" average="44679.4841003418" min="42297.36328125" max="47164.9169921875" energy="147442.29753112793" name="2024_03_29_14_54_33_1_rawfile_13.csv" />
+    <filename14 lastTimestamp="13152.74" firstTimestamp="13000.01" average="6891.311950683594" min="43899.5361328125" max="46585.0830078125" energy="22741.32943725586" name="2024_03_29_14_54_33_1_rawfile_14.csv" />
+  </Datas>
+  <Report>
+    <ScoreUlpBench>
+      <Value>Not Measured</Value>
+    </ScoreUlpBench>
+    <IntensityMin>
+      <Value>42175.29296875</Value>
+    </IntensityMin>
+    <IntensityMin>
+      <Unit>microA</Unit>
+    </IntensityMin>
+    <IntensityMax>
+      <Value>47164.9169921875</Value>
+    </IntensityMax>
+    <IntensityMax>
+      <Unit>microA</Unit>
+    </IntensityMax>
+    <IntensityAverage>
+      <Value>44005.758627275245</Value>
+    </IntensityAverage>
+    <IntensityAverage>
+      <Unit>microA</Unit>
+    </IntensityAverage>
+    <Energy>
+      <Value>1910027.7957000732</Value>
+    </Energy>
+    <Energy>
+      <Unit>microJ</Unit>
+    </Energy>
+    <Temperature>
+      <Value>31.0</Value>
+    </Temperature>
+    <Temperature>
+      <Unit>C</Unit>
+    </Temperature>
+    <CurrentRange>
+      <Value>0.1;500000.0</Value>
+    </CurrentRange>
+    <CurrentRange>
+      <Unit>A</Unit>
+    </CurrentRange>
+    <FirstTimeStamp>
+      <Value>0</Value>
+    </FirstTimeStamp>
+    <FirstTimeStamp>
+      <Unit>s</Unit>
+    </FirstTimeStamp>
+    <LastTimeStamp>
+      <Value>13.15274</Value>
+    </LastTimeStamp>
+    <LastTimeStamp>
+      <Unit>s</Unit>
+    </LastTimeStamp>
+    <NbRecords>
+      <Value>1315274.0</Value>
+    </NbRecords>
+    <SummaryRawLog>
+      <Value>2024_03_29_14_54_33_1_summary.csv</Value>
+    </SummaryRawLog>
+  </Report>
+</PowerMonitorDataLog>
