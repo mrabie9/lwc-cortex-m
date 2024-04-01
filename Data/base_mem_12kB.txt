@@ -1,0 +1,7 @@
+========================= BASE =========================
+Memory region         Used Size  Region Size  %age Used
+             RAM:       16464 B       512 KB      3.14%
+           FLASH:      135308 B         2 MB      6.45%
+arm-none-eabi-size ../../Build/Base.elf
+   text    data     bss     dec     hex filename
+ 120788   14508    1968  137264   21830 ../../Build/Base.elf

@@ -1,0 +1,56 @@
+AES: 
+	Runtime:		1.212495 s
+	Campaign Time: 1.29 s
+
+ascon128: 
+	Runtime:		0.087582 s
+	Campaign Time: 0.16 s
+
+ascon128a: 
+	Runtime:		0.060715 s
+	Campaign Time: 0.14 s
+
+elephant160v2: 
+	Runtime:		13.302586 s
+	Campaign Time: 13.42 s
+
+giftcofb128v1: 
+	Runtime:		0.991794 s
+	Campaign Time: 1.07 s
+
+grain128aeadv2: 
+	Runtime:		11.916109 s
+	Campaign Time: 11.99 s
+
+isapa128av20: 
+	Runtime:		0.240128 s
+	Campaign Time: 0.3 s
+
+isapa128v20: 
+	Runtime:		0.292037 s
+	Campaign Time: 0.36 s
+
+photonbeetleaead128rate128v1: 
+	Runtime:		12.544051 s
+	Campaign Time: 12.61 s
+
+romulusn: 
+	Runtime:		2.955684 s
+	Campaign Time: 3.02 s
+
+schwaemm256128v2: 
+	Runtime:		0.087295 s
+	Campaign Time: 0.15 s
+
+schwaemm256256v2: 
+	Runtime:		0.125280 s
+	Campaign Time: 0.19 s
+
+tinyjambu: 
+	Runtime:		0.152238 s
+	Campaign Time: 0.22 s
+
+xoodyak: 
+	Runtime:		0.227749 s
+	Campaign Time: 0.31 s
+

@@ -1,0 +1,91 @@
+ascon128: 
+	Runtime E:		0.085970 s
+	Runtime D:		0.084979 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  0.25 s
+
+ascon128a: 
+	Runtime E:		0.059587 s
+	Runtime D:		0.059563 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  0.2 s
+
+elephant160v2: 
+	Runtime E:		13.305726 s
+	Runtime D:		13.306324 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  26.69 s
+
+giftcofb128v1: 
+	Runtime E:		0.721552 s
+	Runtime D:		0.722121 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  1.53 s
+
+grain128aeadv2: 
+	Runtime E:		11.067583 s
+	Runtime D:		11.087582 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  22.24 s
+
+isapa128av20: 
+	Runtime E:		0.231345 s
+	Runtime D:		0.230861 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  0.55 s
+
+isapa128v20: 
+	Runtime E:		0.279975 s
+	Runtime D:		0.279494 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  0.64 s
+
+photonbeetleaead128rate128v1: 
+	Runtime E:		12.333287 s
+	Runtime D:		12.310841 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  24.72 s
+
+romulusn: 
+	Runtime E:		2.798458 s
+	Runtime D:		2.787949 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  5.65 s
+
+schwaemm256128v2: 
+	Runtime E:		0.079841 s
+	Runtime D:		0.080429 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  0.25 s
+
+schwaemm256256v2: 
+	Runtime E:		0.114749 s
+	Runtime D:		0.115025 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  0.31 s
+
+tinyjambu: 
+	Runtime E:		0.130576 s
+	Runtime D:		0.125580 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  0.34 s
+
+xoodyak: 
+	Runtime E:		0.216337 s
+	Runtime D:		0.218089 s
+	Output:			0.0
+	Checksum:		0.0
+	Campaign Time:  0.52 s
+

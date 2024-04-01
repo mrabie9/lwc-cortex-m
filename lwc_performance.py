@@ -15,8 +15,8 @@ import traceback
 
 # App name 
 algorithm = ''
-#algorithms = ["AES", "ascon128", "ascon128a", "elephant160v2", "giftcofb128v1", "grain128aeadv2", "isapa128av20", "isapa128v20", "photonbeetleaead128rate128v1", "romulusn", "schwaemm256128v2", "schwaemm256256v2", "tinyjambu", "xoodyak"]
-algorithms = ["AES"]
+algorithms = ["ascon128", "ascon128a", "elephant160v2", "giftcofb128v1", "grain128aeadv2", "isapa128av20", "isapa128v20", "photonbeetleaead128rate128v1", "romulusn", "schwaemm256128v2", "schwaemm256256v2", "tinyjambu", "xoodyak"]
+# algorithms = ["ascon128"]
 data_size = "12kB"
 wdir = r"C:\WSD030\m7_board\m7_board"
 
@@ -218,7 +218,7 @@ if rebuild:
 		register_log_clean.close()
 		os._exit(10)
 
-filename = wdir + "\exec_times_" + board + "_" + data_size + ".txt"
+filename = wdir + "\output_ver_" + board + "_" + data_size + ".txt"
 print(filename)
 f = open(filename, "w") # clear file first
 f.close()
@@ -269,19 +269,29 @@ for x in algorithms:
 				continue
 			
 			nucleo.write(float_to_hex(0.0)) # Sync
-			runtime = nucleo.read(4)
-			if runtime == b'':
+			runtime_e = nucleo.read(4)
+			if runtime_e == b'':
 				log_clean("Comm error: Did not receive application runtime ", 1)
 				print("Comm err")
 				crash += 1
 				start_board()
 				continue
-			runtime = hex_to_float(runtime)
-			print("Runtime: %f s" % runtime)
+			runtime_e = hex_to_float(runtime_e)
+			print("Runtime E: %f s" % runtime_e)
 			f.write(algorithm)
 			f.write(": \n")
-			f.write("\tRuntime:\t\t%f s\n\t" % runtime)
-			log_clean("Runtime: %.2fs" % runtime, 1)
+			f.write("\tRuntime E:\t\t%f s\n\t" % runtime_e)
+			log_clean("Runtime E: %.2fs" % runtime_e, 1)
+
+			if sync() == 1:
+				continue
+			
+			nucleo.write(float_to_hex(0.0)) # Sync
+			runtime_d = nucleo.read(4)
+			runtime_d = hex_to_float(runtime_d)
+			print("Runtime D: %f s" % runtime_d)
+			f.write("Runtime D:\t\t%f s\n\t" % runtime_d)
+			log_clean("Runtime D: %.2fs" % runtime_d, 1)
 			
 			# Get ouptput results
 			# ~ time.sleep(.05)
@@ -290,8 +300,17 @@ for x in algorithms:
 			
 			nucleo.write(float_to_hex(0.0)) # Sync
 			output = hex_to_double(nucleo.read(8))
+
+			if sync() == 1:
+				continue
+
+			nucleo.write(float_to_hex(0.0)) # Sync
+			sum = nucleo.read(1).hex()
 					
 			print("Output: ", output)
+			f.write("Output:\t\t\t%.1f\n\t" % output)
+			f.write("Checksum:\t\t%.1f\n\t" % int(sum))
+			print("Checksum: ", sum)
 			log_clean("Output: " + str(output), 1)
 			countdown_to_reset = 5
 
@@ -308,7 +327,7 @@ for x in algorithms:
 	print("Experiment end")
 	campagin_time = round(time.time() - campaign_start_time,2)
 	print("Campaign Time: ", campagin_time , " s")
-	f.write("Campaign Time: ")
+	f.write("Campaign Time:  ")
 	f.write(str(campagin_time))
 	f.write(" s")
 	f.write("\n\n")
