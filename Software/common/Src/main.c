@@ -234,7 +234,7 @@ int main(void)
   clen = &ctlen;
   m = text;
   c = ct;
-  mlen=msglen;
+  mlen= &msglen;
 	
 // HAL_Delay(2000);
   double output;
