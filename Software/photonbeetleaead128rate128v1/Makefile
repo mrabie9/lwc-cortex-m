@@ -4,7 +4,7 @@
 
 ##### Project setup #####
 # Name of your current project
-PROJ_NAME = $(shell basename $(CURDIR))
+PROJ_NAME = $(shell basename "$(CURDIR)")
 BUILD_DIR = ../../Build
 #~ PROJ_NAME = ascon128
 
@@ -41,7 +41,6 @@ CFLAGS += -I$(CMSIS_DIR)/Device/ST/STM32F7xx/Include
 SRC_FILES += ../../Startup/*
 SRC_FILES += $(HAL_DIR)/Src/*
 SRC_FILES += ../Common/Src/*
-ASS_FILES = Src/*
 CFLAGS += -I$(HAL_DIR)/Inc
 CFLAGS += -I../Common/Inc
 
@@ -63,11 +62,6 @@ clean:
 $(PROJ_NAME).elf: $(SRC_FILES) 
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/$@ $^ -DSTM32F767xx -Wl,--print-memory-usage
 	$(SZ) $(BUILD_DIR)/$@
-
-assembly: 
-	$(CC) -S -fverbose-asm $(CFLAGS) Src/photon.c -o $(BUILD_DIR)/Assembly/photon.s # output verbose assembly
-	$(CC) -S -fverbose-asm $(CFLAGS) Src/encrypt.c -o $(BUILD_DIR)/Assembly/encrypt.s # output verbose assembly
-	
 
 #$(PROJ_NAME).elf: $(SRC_FILES) $(PROJ_NAME).o
 #	$(CC) $(CFLAGS) -o $@ $^ #Src/$(PROJ_NAME)-$(SUFIX).o

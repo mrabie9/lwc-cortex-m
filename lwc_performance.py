@@ -12,24 +12,21 @@ import platform
 import logging
 import traceback
 
+# get current directory
+wdir = os.getcwd()
 
 # App name 
+board = "m7"
 algorithm = ''
 algorithms = ["ascon128", "ascon128a", "elephant160v2", "giftcofb128v1", "grain128aeadv2", "isapa128av20", "isapa128v20", "photonbeetleaead128rate128v1", "romulusn", "schwaemm256128v2", "schwaemm256256v2", "tinyjambu", "xoodyak"]
 # algorithms = ["ascon128"]
 data_size = "12kB"
-wdir = r"C:\WSD030\m7_board\m7_board"
 
-# executable name, output size
-# exec_name,n_results = ("AES.elf", 1)
 
 # Serial number and port
 # sn, serial_port = ("066AFF574887534867083435", "/dev/tty.usbmodem11303") # TODO: Check
-sn, serial_port = ("0669FF555187534867152037", "COM5") # TODO: Check
+sn, serial_port = ("0669FF555187534867152037", "COM3") # TODO: Check
 
-board = "m7"
-
-	
 #set the number of runs
 number_of_runs = 3
 
@@ -206,7 +203,7 @@ except:
 	os._exit(16)
 
 
-rebuild = 0
+rebuild = 1
 rebuild_output_filename = wdir + r"\rebuild_output_" + data_size
 if rebuild:
 	print("Rebuilding All. Please wait...")
