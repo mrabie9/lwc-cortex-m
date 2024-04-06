@@ -24,6 +24,7 @@
 //~ #include "Data.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include <crypto_aead.h>
 // #include <api.h>
@@ -31,10 +32,11 @@
 #define ENCRYPT(a, b, c, d, e, f, g, h, i) crypto_aead_encrypt(a, b, c, d, e, f, g, h, i)
 #define DECRYPT(a, b, c, d, e, f, g, h, i) crypto_aead_decrypt(a, b, c, d, e, f, g, h, i)
 
-#define MSG_SIZE INPUT_SIZE*4
+#define MSG_SIZE_B INPUT_SIZE*4 // message size in bytes
+#define MSG_SIZE_INT INPUT_SIZE // num of ints in message
 
 // #define POWER_CONS
-#define N_LOOP 1
+// #define N_LOOP 1
 
 /* Private includes ----------------------------------------------------------*/
 UART_HandleTypeDef huart3;
@@ -160,14 +162,14 @@ void send_output(double output)
   send_serial(&output, 8);
 }
 
-void send_checksum(uint32_t output)
+void send_uint32(uint32_t output)
 {
   float discard = 0;
 
   // Sync with script
   sync();
   receive_serial(&discard, 4);
-  send_serial(&output, 1);
+  send_serial(&output, 4);
 }
 
 /**
@@ -213,13 +215,13 @@ int main(void)
 #endif
   volatile unsigned char nonce[CRYPTO_NPUBBYTES] = {0};
   // volatile unsigned char key[CRYPTO_KEYBYTES] = {0};
-  volatile uint64_t msglen = MSG_SIZE;// sizeof(text) / sizeof(unsigned char);
+  volatile uint64_t msglen = MSG_SIZE_B;// sizeof(text) / sizeof(unsigned char);
   volatile unsigned long long ctlen = 0;
-  volatile unsigned char ct[MSG_SIZE + CRYPTO_ABYTES] = {0};
+  volatile unsigned char ct[MSG_SIZE_B + CRYPTO_ABYTES] = {0};
   volatile unsigned long long adlen = 0;
 
   // decrypt check
-  volatile unsigned char dt[MSG_SIZE] = {0};
+  uint8_t dt[MSG_SIZE_B] = {0};
 
   // Declare pointers
   volatile unsigned char *c;
@@ -238,7 +240,7 @@ int main(void)
 	
 // HAL_Delay(2000);
   double output;
-  uint8_t sum = 0;
+  uint32_t err_c = 0;
       //output = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
 
   while (1)
@@ -258,30 +260,30 @@ int main(void)
 		KIN1_ResetCycleCounter();  /* reset cycle counter */
 		KIN1_EnableCycleCounter(); /* start counting */
 
-		// Start application
-    // Encryption
+		// Start encryption
 		output = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
 		cycles_e = KIN1_GetCycleCounter(); /* get cycle counter */
     
     // Decryption
     KIN1_ResetCycleCounter();  /* reset cycle counter */
 		KIN1_EnableCycleCounter(); /* start counting */
-    // DECRYPT(dm, mlen, NULL, c, ctlen, NULL, adlen, npub, k);
+    
     double decrypt = DECRYPT(dt, mlen, NULL, c, *clen, NULL, adlen, npub, k);
-
     cycles_d = KIN1_GetCycleCounter(); /* get cycle counter */
 
     // Checksum
-    int check_ind[5] = {29, 774, 226, 973, 2079};
-    for (int i=0;i<5;i++){
-      sum += (dt[check_ind[i]*4] - text[check_ind[i]]);
+    uint32_t dt_int;
+    for (int i=0;i<MSG_SIZE_INT;i++){
+      dt_int = dt[i*4] | (dt[i*4 + 1] << 8) | (dt[i*4 +2] << 16) | (dt[i*4 +3] << 24);
+      if (dt_int != text[i])
+        err_c += 1;
     }
 
 		send_app_runtime(cycles_e);
     send_runtime(cycles_d);
 		// Send output
 		send_output(decrypt);
-    send_checksum(sum);
+    send_uint32(err_c);
 		//~ HAL_Delay(1000);
 	
 	#endif

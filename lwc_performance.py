@@ -16,10 +16,11 @@ import traceback
 wdir = os.getcwd()
 
 # App name 
+rebuild = 1
 board = "m7"
 algorithm = ''
 algorithms = ["ascon128", "ascon128a", "elephant160v2", "giftcofb128v1", "grain128aeadv2", "isapa128av20", "isapa128v20", "photonbeetleaead128rate128v1", "romulusn", "schwaemm256128v2", "schwaemm256256v2", "tinyjambu", "xoodyak"]
-# algorithms = ["ascon128"]
+#algorithms = ["ascon128"]
 data_size = "12kB"
 
 
@@ -202,8 +203,6 @@ except:
 	print("quit")
 	os._exit(16)
 
-
-rebuild = 1
 rebuild_output_filename = wdir + r"\rebuild_output_" + data_size
 if rebuild:
 	print("Rebuilding All. Please wait...")
@@ -302,11 +301,11 @@ for x in algorithms:
 				continue
 
 			nucleo.write(float_to_hex(0.0)) # Sync
-			sum = nucleo.read(1).hex()
+			sum = hex_to_uint32(nucleo.read(4))
 					
 			print("Output: ", output)
 			f.write("Output:\t\t\t%.1f\n\t" % output)
-			f.write("Checksum:\t\t%.1f\n\t" % int(sum))
+			f.write("Checksum:\t\t%.1f\n\t" % sum)
 			print("Checksum: ", sum)
 			log_clean("Output: " + str(output), 1)
 			countdown_to_reset = 5

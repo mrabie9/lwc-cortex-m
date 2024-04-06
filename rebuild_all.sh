@@ -15,4 +15,4 @@ for app in AES ascon128 ascon128a elephant160v2 giftcofb128v1 grain128aeadv2 isa
 	echo >> $output_file
 done
 
-$SHELL #(prevent shell from auto closing)
+#$SHELL #(prevent shell from auto closing)

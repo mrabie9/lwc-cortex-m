@@ -1,91 +1,91 @@
-# 05 April 24
+# 06 April 24
 ascon128: 
-	Runtime E:		0.085970 s
-	Runtime D:		0.084978 s
+	Runtime E:		0.085464 s
+	Runtime D:		0.085976 s
 	Output:			0.0
 	Checksum:		0.0
 	Campaign Time:  0.25 s
 
 ascon128a: 
-	Runtime E:		0.059588 s
-	Runtime D:		0.059562 s
+	Runtime E:		0.059273 s
+	Runtime D:		0.059155 s
 	Output:			0.0
 	Checksum:		0.0
 	Campaign Time:  0.2 s
 
 elephant160v2: 
-	Runtime E:		13.368565 s
-	Runtime D:		13.368986 s
+	Runtime E:		12.699022 s
+	Runtime D:		12.699104 s
 	Output:			0.0
 	Checksum:		0.0
-	Campaign Time:  26.82 s
+	Campaign Time:  25.48 s
 
 giftcofb128v1: 
-	Runtime E:		0.776994 s
-	Runtime D:		0.778019 s
+	Runtime E:		0.786567 s
+	Runtime D:		0.786918 s
 	Output:			0.0
 	Checksum:		0.0
-	Campaign Time:  1.63 s
+	Campaign Time:  1.65 s
 
 grain128aeadv2: 
-	Runtime E:		11.060601 s
-	Runtime D:		11.069699 s
+	Runtime E:		10.942996 s
+	Runtime D:		11.088567 s
 	Output:			0.0
 	Checksum:		0.0
-	Campaign Time:  22.21 s
+	Campaign Time:  22.11 s
 
 isapa128av20: 
-	Runtime E:		0.231316 s
-	Runtime D:		0.229302 s
+	Runtime E:		0.230960 s
+	Runtime D:		0.230138 s
 	Output:			0.0
 	Checksum:		0.0
 	Campaign Time:  0.54 s
 
 isapa128v20: 
-	Runtime E:		0.279955 s
-	Runtime D:		0.277929 s
+	Runtime E:		0.279597 s
+	Runtime D:		0.278775 s
 	Output:			0.0
 	Checksum:		0.0
-	Campaign Time:  0.64 s
+	Campaign Time:  0.63 s
 
 photonbeetleaead128rate128v1: 
-	Runtime E:		11.686730 s
-	Runtime D:		11.747786 s
+	Runtime E:		11.829445 s
+	Runtime D:		11.698627 s
 	Output:			0.0
 	Checksum:		0.0
-	Campaign Time:  23.51 s
+	Campaign Time:  23.61 s
 
 romulusn: 
-	Runtime E:		2.754219 s
-	Runtime D:		2.750010 s
+	Runtime E:		2.756155 s
+	Runtime D:		2.763581 s
 	Output:			0.0
 	Checksum:		0.0
-	Campaign Time:  5.58 s
+	Campaign Time:  5.6 s
 
 schwaemm256128v2: 
-	Runtime E:		0.079487 s
-	Runtime D:		0.080224 s
+	Runtime E:		0.079406 s
+	Runtime D:		0.079593 s
 	Output:			0.0
 	Checksum:		0.0
 	Campaign Time:  0.24 s
 
 schwaemm256256v2: 
-	Runtime E:		0.114388 s
-	Runtime D:		0.114926 s
+	Runtime E:		0.114414 s
+	Runtime D:		0.114727 s
 	Output:			0.0
 	Checksum:		0.0
 	Campaign Time:  0.31 s
 
 tinyjambu: 
-	Runtime E:		0.130571 s
-	Runtime D:		0.125478 s
+	Runtime E:		0.139509 s
+	Runtime D:		0.139541 s
 	Output:			0.0
 	Checksum:		0.0
-	Campaign Time:  0.34 s
+	Campaign Time:  0.36 s
 
 xoodyak: 
-	Runtime E:		0.216487 s
-	Runtime D:		0.217539 s
+	Runtime E:		0.217151 s
+	Runtime D:		0.216151 s
 	Output:			0.0
 	Checksum:		0.0
 	Campaign Time:  0.51 s
