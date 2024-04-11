@@ -1,92 +1,106 @@
-# 06 April 24
+# 11 April 24
+
 ascon128: 
-	Runtime E:		0.085464 s
-	Runtime D:		0.085976 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  0.25 s
+	Runtime E:		0.084797 s
+	Runtime D:		0.085638 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		0.160278 s
 
 ascon128a: 
-	Runtime E:		0.059273 s
-	Runtime D:		0.059155 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  0.2 s
-
-elephant160v2: 
-	Runtime E:		12.699022 s
-	Runtime D:		12.699104 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  25.48 s
+	Runtime E:		0.058806 s
+	Runtime D:		0.059654 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		0.115629 s
 
 giftcofb128v1: 
-	Runtime E:		0.786567 s
-	Runtime D:		0.786918 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  1.65 s
-
-grain128aeadv2: 
-	Runtime E:		10.942996 s
-	Runtime D:		11.088567 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  22.11 s
+	Runtime E:		0.790749 s
+	Runtime D:		0.791599 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		1.580202 s
 
 isapa128av20: 
-	Runtime E:		0.230960 s
-	Runtime D:		0.230138 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  0.54 s
+	Runtime E:		0.230480 s
+	Runtime D:		0.231133 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		0.46448 s
 
 isapa128v20: 
-	Runtime E:		0.279597 s
-	Runtime D:		0.278775 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  0.63 s
-
-photonbeetleaead128rate128v1: 
-	Runtime E:		11.829445 s
-	Runtime D:		11.698627 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  23.61 s
-
-romulusn: 
-	Runtime E:		2.756155 s
-	Runtime D:		2.763581 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  5.6 s
+	Runtime E:		0.279712 s
+	Runtime D:		0.279280 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		0.549509 s
 
 schwaemm256128v2: 
-	Runtime E:		0.079406 s
-	Runtime D:		0.079593 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  0.24 s
+	Runtime E:		0.080700 s
+	Runtime D:		0.079964 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		0.147465 s
 
 schwaemm256256v2: 
-	Runtime E:		0.114414 s
-	Runtime D:		0.114727 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  0.31 s
+	Runtime E:		0.114492 s
+	Runtime D:		0.115024 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		0.230862 s
 
 tinyjambu: 
-	Runtime E:		0.139509 s
-	Runtime D:		0.139541 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  0.36 s
+	Runtime E:		0.135086 s
+	Runtime D:		0.135300 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		0.26543 s
 
 xoodyak: 
-	Runtime E:		0.217151 s
-	Runtime D:		0.216151 s
-	Output:			0.0
-	Checksum:		0.0
-	Campaign Time:  0.51 s
+	Runtime E:		0.217408 s
+	Runtime D:		0.217300 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		0.428478 s
+
+elephant160v2: 
+	Runtime E:		13.658995 s
+	Runtime D:		13.659066 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		27.321771 s
+
+grain128aeadv2: 
+	Runtime E:		11.097673 s
+	Runtime D:		11.052264 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		22.140974 s
+
+photonbeetleaead128rate128v1: 
+	Runtime E:		11.748544 s
+	Runtime D:		11.829778 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		23.574137 s
+
+romulusn: 
+	Runtime E:		2.748340 s
+	Runtime D:		2.758097 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		5.507159 s
 
