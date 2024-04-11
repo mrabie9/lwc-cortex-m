@@ -49,43 +49,6 @@ static void MX_GPIO_Init(void);
 //~ static void MX_TIM2_Init(void);
 static void MX_USART3_UART_Init(void);
 
-void send_serial(uint8_t *data, int size)
-{
-
-  HAL_UART_Transmit(&huart3, data, size, HAL_MAX_DELAY);
-}
-
-void receive_serial(uint8_t *data, int size)
-{
-
-  HAL_UART_Receive(&huart3, data, size, HAL_MAX_DELAY);
-}
-
-// Sync controller and wrapper
-void sync()
-{
-  float zero = 0.0;
-  float one = 1.0;
-
-  // Sync
-  while (1)
-  {
-    float rec_zero;
-    receive_serial(&rec_zero, 4);
-
-    if (!(rec_zero == (float)0))
-    {
-      send_serial(&one, 4);
-      continue;
-    }
-    else
-    {
-      send_serial(&zero, 4);
-      break;
-    }
-  }
-}
-
 /* DWT (Data Watchpoint and Trace) registers, only exists on ARM Cortex with a DWT unit */
 #define KIN1_DWT_CONTROL (*((volatile uint32_t *)0xE0001000))
 /*!< DWT Control register */
@@ -124,52 +87,78 @@ void sync()
   KIN1_DWT_CYCCNT
 /*!< Read cycle counter register */
 
-uint32_t cycles_e, cycles_d; /* number of cycles */
+void send_serial(uint8_t *data, int size)
+{
+
+  HAL_UART_Transmit(&huart3, data, size, HAL_MAX_DELAY);
+}
+
+void receive_serial(uint8_t *data, int size)
+{
+
+  HAL_UART_Receive(&huart3, data, size, HAL_MAX_DELAY);
+}
+
+// Sync controller and wrapper
+void sync()
+{
+  float zero = 0.0;
+  float one = 1.0;
+  uint8_t size = sizeof(float);
+
+  // Sync
+  float val;
+  receive_serial(&val, size);
+  if (val == (float)0)
+  {
+    send_serial(&zero, size);
+  }
+  else
+  {
+    send_serial(&one, size);
+  }
+}
+
+uint32_t cycles_e, cycles_d;  /* number of cycles */
 int freq;
 
 void send_app_runtime(float c)
 {
-  float time, discard;
+  float time = (float)c / freq; 
+  uint8_t size = sizeof(float);
 
   // Sync with script
-  send_serial(&time, 4);
   sync();
-  receive_serial(&discard, 4);
-
   // Send app runtime (seconds)
-  time = (float)c / freq; 
-  send_serial(&time, 4);
+  send_serial(&time, size);
 }
 
 void send_runtime(float c)
 {
-  float time, discard = 0;
-  time = (float)c / freq; 
+  uint8_t size = sizeof(float);
+  float time = (float)c / freq; 
 
   // Sync with script
   sync();
-  receive_serial(&discard, 4);
-  send_serial(&time, 4);
+  send_serial(&time, size);
 }
 
 void send_output(double output)
 {
-  float discard = 0;
+  uint8_t size = sizeof(double);
 
   // Sync with script
   sync();
-  receive_serial(&discard, 4);
-  send_serial(&output, 8);
+  send_serial(&output, size);
 }
 
 void send_uint32(uint32_t output)
 {
-  float discard = 0;
+  uint8_t size = sizeof(uint32_t);
 
   // Sync with script
   sync();
-  receive_serial(&discard, 4);
-  send_serial(&output, 4);
+  send_serial(&output, size);
 }
 
 /**
@@ -241,35 +230,43 @@ int main(void)
 // HAL_Delay(2000);
   double output;
   uint32_t err_c = 0;
-      //output = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
 
+/* USER CODE BEGIN WHILE */
   while (1)
   {
 	#ifdef POWER_CONS
-		
+		HAL_Delay(2000);
 		for(int i=0;i<N_LOOP;i++)
-			output = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
-		HAL_Delay(1000);
-
+			ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
+    HAL_Delay(3000);
+		for(int i=0;i<N_LOOP;i++)
+			DECRYPT(dt, mlen, NULL, c, *clen, NULL, adlen, npub, k);
+    
+    // HAL_GPIO_TogglePin (LD2_GPIO_Port, LD2_Pin);
+	
 
 	#else
-
+    float discard;
 		// Sync before app execution
 		sync();
 
 		KIN1_ResetCycleCounter();  /* reset cycle counter */
 		KIN1_EnableCycleCounter(); /* start counting */
-
-		// Start encryption
-		output = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
+    
+		// Start application
+    // Encryption
+		double encrypt = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
 		cycles_e = KIN1_GetCycleCounter(); /* get cycle counter */
     
     // Decryption
     KIN1_ResetCycleCounter();  /* reset cycle counter */
 		KIN1_EnableCycleCounter(); /* start counting */
-    
+    // DECRYPT(dm, mlen, NULL, c, ctlen, NULL, adlen, npub, k);
     double decrypt = DECRYPT(dt, mlen, NULL, c, *clen, NULL, adlen, npub, k);
+
     cycles_d = KIN1_GetCycleCounter(); /* get cycle counter */
+
+    send_serial(&discard, 4);
 
     // Checksum
     uint32_t dt_int;
@@ -279,12 +276,13 @@ int main(void)
         err_c += 1;
     }
 
+    send_serial(&discard, 4);
+    // Send data
 		send_app_runtime(cycles_e);
     send_runtime(cycles_d);
-		// Send output
+    send_output(encrypt);
 		send_output(decrypt);
     send_uint32(err_c);
-		//~ HAL_Delay(1000);
 	
 	#endif
   }

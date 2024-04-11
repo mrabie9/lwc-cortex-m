@@ -3,3 +3,5 @@
 #define CRYPTO_NPUBBYTES 12
 #define CRYPTO_ABYTES 8
 #define CRYPTO_NOOVERLAP 1
+
+#define N_LOOP 1
