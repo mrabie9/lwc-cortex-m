@@ -35,7 +35,7 @@
 #define MSG_SIZE_B INPUT_SIZE*4 // message size in bytes
 #define MSG_SIZE_INT INPUT_SIZE // num of ints in message
 
-// #define POWER_CONS
+#define POWER_CONS
 // #define N_LOOP 1
 
 /* Private includes ----------------------------------------------------------*/
