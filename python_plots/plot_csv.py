@@ -11,6 +11,7 @@ global i_e_max, i_e_avg, i_e_min, i_d_max, i_d_avg, i_d_min, n_calibrated, t_cal
 global n_lcutoff_points, l_cut_off, n_hcutoff_points, h_cut_off, calibrated
 global values 
 
+# Variable names to write to xlsx
 variables = ['n_loop', 'Average encryption time', 'Average decryption time', 'Average encryption energy', 'Average decryption energy',
              'Maximum encryption current', 'Average encryption current', 'Minimum encryption current', 
              'Maximum decryption current', 'Average decryption current', 'Minimum decryption current',
@@ -19,31 +20,31 @@ variables = ['n_loop', 'Average encryption time', 'Average decryption time', 'Av
 # values = [n_loop, t_avg_e, t_avg_d,  energy_e, energy_d,
 #           i_e_max, i_e_avg, i_e_min, i_d_max, i_d_avg, i_d_min, n_calibrated,', '.join(map(str, t_calibrations))]
 
-data_dir = "../Data/Power/python_plots/02_csv_dir/ascon128_enc_dec_1000x/"
-output = "../Data/Power/python_plots/00_Output/ascon128_enc_dec_1000x.txt"
+data_dir = "../Data/Power/python_plots/02_csv_dir/grain_enc_dec_10x/"
+output = "../Data/Power/python_plots/00_Output/grain_enc_dec_10x.txt"
 
-data_obtained = True
-energy_calc = True
+data_obtained = False# True# False# True# False# True# False# True# False
+energy_calc = False# True# False# True# False# True# False# True# False
 
 # Start/end times dict
 timestamps = {
-    'ascon128_enc_dec_1000x': {'start_e': 1.096410, 'stop_e':183.097190 , 'start_d': 186.102970, 'stop_d':368.140520},
-    'ascon128a_enc_dec_1000x': {'start_e': 0.868760, 'stop_e':126.672980, 'start_d': 129.678520 , 'stop_d':255.602330},
-    'giftc_enc_dec_200x': {'start_e': 0.979360, 'stop_e': 234.564920, 'start_d': 237.570210, 'stop_d': 471.166760},
-    'isapa128_enc_dec_500x': {'start_e': 1.106770, 'stop_e': 336.044850 , 'start_d': 339.051670, 'stop_d': 674.354140},
-    'isapa128a_enc_dec_500x': {'start_e': 1.095630, 'stop_e': 263.663310, 'start_d': 266.669700 , 'stop_d': 529.252050},
-    'sparkle128_enc_dec_1000x': {'start_e': 1.064100, 'stop_e': 84.239800, 'start_d': 87.245910, 'stop_d': 171.738190},
-    'sparkle256_enc_dec_1000x': {'start_e': 1.142160, 'stop_e': 116.325410, 'start_d': 119.331090, 'stop_d': 235.864220 },
-    'tinyjambu_enc_dec_1000x': {'start_e': 1.019490, 'stop_e': 158.006720, 'start_d': 161.009910, 'stop_d': 318.775550},
-    'xoodyak_enc_dec_1000x': {'start_e': 1.180800, 'stop_e': 182.506460, 'start_d': 185.512820, 'stop_d': 367.872190 },
-    'eleph_enc_dec_10x': {'start_e': 5.469650, 'stop_e': 227.465460, 'start_d': 230.472160, 'stop_d': 452.353150 },
-    'grain_enc_dec_10x': {'start_e': 1.445850, 'stop_e': 183.564560, 'start_d': 186.567760, 'stop_d': 366.392920},
-    'photon_enc_dec_15x': {'start_e': 1.13041, 'stop_e': 203.55816, 'start_d': 206.56335, 'stop_d':409.04147},
-    'romulusn_enc_dec_50x': {'start_e': 1.180800, 'stop_e': 182.506460, 'start_d': 185.512820, 'stop_d': 367.872190},
+    # 'ascon128_enc_dec_1000x': {'start_e': 0.88064, 'stop_e':86.84772 , 'start_d': 89.84808, 'stop_d':174.49783},
+    # 'ascon128a_enc_dec_1000x': {'start_e': 0.52947, 'stop_e':60.11307, 'start_d': 63.11367 , 'stop_d':122.25007},
+    # 'giftc_enc_dec_200x': {'start_e': 0.85437, 'stop_e': 156.25025, 'start_d': 159.25074, 'stop_d': 314.85193},
+    # 'isapa128_enc_dec_500x': {'start_e': 0.94348, 'stop_e': 141.19371, 'start_d': 144.19465, 'stop_d': 284.03599},
+    # 'isapa128a_enc_dec_500x': {'start_e': 0.99050, 'stop_e': 116.92109, 'start_d':  119.92170, 'stop_d': 235.52180},
+    # 'sparkle128_enc_dec_1000x': {'start_e': 1.22652, 'stop_e': 80.71972, 'start_d': 83.72060, 'stop_d': 163.99806},
+    # 'sparkle256_enc_dec_1000x': {'start_e': 1.04642, 'stop_e': 115.44641, 'start_d': 118.44648, 'stop_d': 223.41102},
+    # 'tinyjambu_enc_dec_1000x': {'start_e': 1.06393, 'stop_e': 136.55366, 'start_d': 139.55458, 'stop_d': 274.98104},
+    # 'xoodyak_enc_dec_1000x': {'start_e': 0.76751, 'stop_e': 217.19979, 'start_d': 220.20037, 'stop_d': 437.68150},
+    # 'eleph_enc_dec_10x': {'start_e': 0.97812, 'stop_e': 120.75210, 'start_d': 123.75230, 'stop_d': 240.38971},
+    'grain_enc_dec_10x': {'start_e': 1.06599, 'stop_e': 108.55892, 'start_d': 110.37643, 'stop_d': 211.14548},
+    # 'photon_enc_dec_15x': {'start_e': 1.43538, 'stop_e': 176.73859, 'start_d': 179.73937, 'stop_d': 355.95881},
+    # 'romulusn_enc_dec_50x': {'start_e': 1.32967, 'stop_e': 138.96308, 'start_d': 141.96324, 'stop_d': 279.46629},
 
     ### 'Random' second sets
-    # 'photon2_enc_dec_15x': {'start_e': 0.78681, 'stop_e': 202.93627, 'start_d': 205.93713, 'stop_d': 407.90221},
-    # 'ascon128a_ngnd_enc_dec_1000x': {'start_e': 0., 'stop_e': , 'start_d': , 'stop_d': }
+    # 'photon2_enc_dec_15x': {'start_e': , 'stop_e': , 'start_d': , 'stop_d': },
+    # 'ascon128a_ngnd_enc_dec_1000x': {'start_e': , 'stop_e': , 'start_d': , 'stop_d': },
     }
 
 
@@ -75,11 +76,6 @@ def main():
     y_values = df['y']/1e6
     # print(x_values)
 
-    # Crop first 4 seconds if elephant
-    if data_dir== "../Data/Power/python_plots/eleph_enc_dec_10x/":
-        x_values = x_values[399999:]
-        y_values = y_values[399999:]
-
     # Check for calibrations
     n_calibrated = len(y_values[y_values>1])
     t_calibrations = y_values[y_values>1].index
@@ -99,7 +95,7 @@ def main():
         y_values = y_values[y_values<1]
         y_values = y_values[y_values>0.005]
         print("Removed " + str(n_lcutoff_points) + " at 0.005 A cut-off")
-        print("Removed " + str(n_hcutoff_points) + " above " + str(n_hcutoff_points) + "A")
+        print("Removed " + str(n_hcutoff_points) + " above " + str(h_cut_off) + "A")
     else:
         l_cut_off = 0.001
         n_lcutoff_points =  len(y_values[y_values<l_cut_off])
@@ -246,8 +242,8 @@ def writexl(col, row):
     global values
 
     # open workbook
-    workbook = xl.load_workbook("../Data/Data.xlsx")
-    ws = workbook['Power - M4']
+    workbook = xl.load_workbook("../Data/Data_m7.xlsx")
+    ws = workbook['Power - M7']
 
     # Write the variable names to the first row
     # for row, var in enumerate(variables, start=row):
@@ -255,7 +251,7 @@ def writexl(col, row):
     # row = row_start
     for row, var in enumerate(values, start=row):
         ws.cell(row=row, column=col, value=var)
-    workbook.save("../Data/Data.xlsx")
+    workbook.save("../Data/Data_m7.xlsx")
 
 if data_obtained:
     col = 3
