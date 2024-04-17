@@ -56,11 +56,11 @@ clean:
 	rm -f $(PROJ_NAME).bin $(PROJ_NAME).hex $(PROJ_NAME).elf $(PROJ_NAME).o
 
 $(PROJ_NAME).elf: $(SRC_FILES) 
-	$(CC) $(CFLAGS) -o $@ $^ -DSTM32F767xx -Wl,--print-memory-usage
+	$(CC) -O3 $(CFLAGS) -o $@ $^ -DSTM32F767xx -Wl,--print-memory-usage
 	$(SZ) $@
 
 #$(PROJ_NAME).elf: $(SRC_FILES) $(PROJ_NAME).o
-#	$(CC) $(CFLAGS) -o $@ $^ #Src/$(PROJ_NAME)-$(SUFIX).o
+#	$(CC) -O3 $(CFLAGS) -o $@ $^ #Src/$(PROJ_NAME)-$(SUFIX).o
 
 #$(PROJ_NAME).o: $(PROJ_NAME).c
 #	$(CLANG) --target=arm-none-eabi -mcpu=cortex-m4 -mfloat-abi=soft -mthumb -mlittle-endian -IInc -I/soft64/cross/gcc/gcc-arm-none-eabi-10.3/arm-none-eabi/include/ -fshort-enums -DKEY=$(KEY) -DDEBUG $(EXTRA_FLAGS) -c -o $@ $<

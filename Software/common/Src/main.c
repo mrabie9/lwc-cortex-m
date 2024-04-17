@@ -36,7 +36,6 @@
 #define MSG_SIZE_INT INPUT_SIZE // num of ints in message
 
 #define POWER_CONS
-// #define N_LOOP 1
 
 /* Private includes ----------------------------------------------------------*/
 UART_HandleTypeDef huart3;
@@ -235,14 +234,43 @@ int main(void)
   while (1)
   {
 	#ifdef POWER_CONS
-		HAL_Delay(2000);
+    // Sync before app execution
+    // HAL_Delay(10000);
+		sync();
+    float discard;
+    double encrypt, decrypt;
+    HAL_Delay(2000);
+
+
+
+    KIN1_ResetCycleCounter();  /* reset cycle counter */
+		KIN1_EnableCycleCounter(); /* start counting */
 		for(int i=0;i<N_LOOP;i++)
-			ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
+			encrypt = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
+    cycles_e = KIN1_GetCycleCounter(); /* get cycle counter */
     HAL_Delay(3000);
+    KIN1_ResetCycleCounter();  /* reset cycle counter */
+		KIN1_EnableCycleCounter(); /* start counting */
+
 		for(int i=0;i<N_LOOP;i++)
-			DECRYPT(dt, mlen, NULL, c, *clen, NULL, adlen, npub, k);
+		  decrypt = DECRYPT(dt, mlen, NULL, c, *clen, NULL, adlen, npub, k);
+    cycles_d = KIN1_GetCycleCounter(); /* get cycle counter */
+    HAL_Delay(2000);  
+    // Checksum
+    uint32_t dt_int;
+    for (int i=0;i<MSG_SIZE_INT;i++){
+      dt_int = dt[i*4] | (dt[i*4 + 1] << 8) | (dt[i*4 +2] << 16) | (dt[i*4 +3] << 24);
+      if (dt_int != text[i])
+        err_c += 1;
+    }
     
-    // HAL_GPIO_TogglePin (LD2_GPIO_Port, LD2_Pin);
+    send_serial(&discard, 4);
+    // Send data
+		send_app_runtime(cycles_e);
+    send_runtime(cycles_d);
+    send_output(encrypt);
+		send_output(decrypt);
+    send_uint32(err_c);
 	
 
 	#else
@@ -253,17 +281,15 @@ int main(void)
 		KIN1_ResetCycleCounter();  /* reset cycle counter */
 		KIN1_EnableCycleCounter(); /* start counting */
     
-		// Start application
     // Encryption
 		double encrypt = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
 		cycles_e = KIN1_GetCycleCounter(); /* get cycle counter */
     
-    // Decryption
     KIN1_ResetCycleCounter();  /* reset cycle counter */
 		KIN1_EnableCycleCounter(); /* start counting */
-    // DECRYPT(dm, mlen, NULL, c, ctlen, NULL, adlen, npub, k);
-    double decrypt = DECRYPT(dt, mlen, NULL, c, *clen, NULL, adlen, npub, k);
 
+    // Decryption
+    double decrypt = DECRYPT(dt, mlen, NULL, c, *clen, NULL, adlen, npub, k);
     cycles_d = KIN1_GetCycleCounter(); /* get cycle counter */
 
     send_serial(&discard, 4);

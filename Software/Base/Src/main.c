@@ -25,6 +25,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MSG_SIZE_B INPUT_SIZE*4 // message size in bytes
+#define MSG_SIZE_INT INPUT_SIZE // num of ints in message
 
 /* Private includes ----------------------------------------------------------*/
 UART_HandleTypeDef huart3;
@@ -47,31 +49,6 @@ void receive_serial(uint8_t *data, int size)
 {
 
   HAL_UART_Receive(&huart3, data, size, HAL_MAX_DELAY);
-}
-
-// Sync controller and wrapper
-void sync()
-{
-  float zero = 0.0;
-  float one = 1.0;
-
-  // Sync
-  while (1)
-  {
-    float rec_zero;
-    receive_serial(&rec_zero, 4);
-
-    if (!(rec_zero == (float)0))
-    {
-      send_serial(&one, 4);
-      continue;
-    }
-    else
-    {
-      send_serial(&zero, 4);
-      break;
-    }
-  }
 }
 
 /* DWT (Data Watchpoint and Trace) registers, only exists on ARM Cortex with a DWT unit */
@@ -112,31 +89,66 @@ void sync()
   KIN1_DWT_CYCCNT
 /*!< Read cycle counter register */
 
-uint32_t cycles; /* number of cycles */
+// Sync controller and wrapper
+void sync()
+{
+  float zero = 0.0;
+  float one = 1.0;
+  uint8_t size = sizeof(float);
+
+  // Sync
+  float val;
+  receive_serial(&val, size);
+  if (val == (float)0)
+  {
+    send_serial(&zero, size);
+  }
+  else
+  {
+    send_serial(&one, size);
+  }
+}
+
+uint32_t cycles_e, cycles_d;  /* number of cycles */
 int freq;
 
-void send_app_runtime()
+void send_app_runtime(float c)
 {
-  float time, discard;
+  float time = (float)c / freq; 
+  uint8_t size = sizeof(float);
 
   // Sync with script
-  send_serial(&time, 4);
   sync();
-  receive_serial(&discard, 4);
-
   // Send app runtime (seconds)
-  time = (float)cycles / freq; // L476 M4
-  send_serial(&time, 4);
+  send_serial(&time, size);
+}
+
+void send_runtime(float c)
+{
+  uint8_t size = sizeof(float);
+  float time = (float)c / freq; 
+
+  // Sync with script
+  sync();
+  send_serial(&time, size);
 }
 
 void send_output(double output)
 {
-  float discard = 0;
+  uint8_t size = sizeof(double);
 
   // Sync with script
   sync();
-  receive_serial(&discard, 4);
-  send_serial(&output, 8);
+  send_serial(&output, size);
+}
+
+void send_uint32(uint32_t output)
+{
+  uint8_t size = sizeof(uint32_t);
+
+  // Sync with script
+  sync();
+  send_serial(&output, size);
 }
 
 /**
@@ -175,30 +187,100 @@ int main(void)
   KIN1_EnableLockAccess();
   freq = HAL_RCC_GetSysClockFreq();
 
+ /*  
+#if CRYPTO_KEYBYTES==16
+    volatile unsigned char key[CRYPTO_KEYBYTES] = {0xDEADBEEF, 0x01234567, 0x89ABCDEF, 0xDEADBEEF};
+#else 
+    volatile unsigned char  key[CRYPTO_KEYBYTES] = {0xDEADBEEF, 0x01234567, 0x89ABCDEF, 0xDEADBEEF, 0xDEADBEEF, 0x01234567, 0x89ABCDEF, 0xDEADBEEF};
+#endif
+  volatile unsigned char nonce[CRYPTO_NPUBBYTES] = {0};
+  // volatile unsigned char key[CRYPTO_KEYBYTES] = {0};
+  volatile uint64_t msglen = MSG_SIZE_B;// sizeof(text) / sizeof(unsigned char);
+  volatile unsigned long long ctlen = 0;
+  volatile unsigned char ct[MSG_SIZE_B + CRYPTO_ABYTES] = {0};
+  volatile unsigned long long adlen = 0;
+	*/
+  // decrypt check
+  uint8_t dt[MSG_SIZE_B] = {0};
+/*
+  // Declare pointers
+  volatile unsigned char *c;
+  volatile unsigned long long *clen;
+  volatile uint64_t *mlen;
+  volatile unsigned char *k, *npub;
+  volatile unsigned char *m;
+
+  // Initialise pointers
+  k = key;
+  npub = nonce;
+  clen = &ctlen;
+  m = text;
+  c = ct;
+  mlen = &msglen;
+*/
   double output;
+  uint8_t sum = 0;
+  HAL_GPIO_TogglePin (LD2_GPIO_Port, LD2_Pin);
+  uint32_t err_c = 0;
+  /* USER CODE END 2 */
 
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   while (1)
-  {
+ {
+	#ifdef POWER_CONS
+		
+		for(int i=0;i<N_LOOP;i++)
+			output = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
+      HAL_GPIO_TogglePin (LD2_GPIO_Port, LD2_Pin);
+		HAL_Delay(1000);
 
-    // Sync before app execution
-    sync();
 
+	#else
+    float discard;
+		// Sync before app execution
+		sync();
+
+		KIN1_ResetCycleCounter();  /* reset cycle counter */
+		KIN1_EnableCycleCounter(); /* start counting */
+    
+		// Start application
+    // Encryption
+		double encrypt = 0;//ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
+		cycles_e = KIN1_GetCycleCounter(); /* get cycle counter */
+    
+    // Decryption
     KIN1_ResetCycleCounter();  /* reset cycle counter */
-    KIN1_EnableCycleCounter(); /* start counting */
+		KIN1_EnableCycleCounter(); /* start counting */
+    // DECRYPT(dm, mlen, NULL, c, ctlen, NULL, adlen, npub, k);
+    double decrypt =0;// DECRYPT(dt, mlen, NULL, c, *clen, NULL, adlen, npub, k);
 
-    // Start application
-    //~ printf("Starting App\n");
-    output = 0;
+    cycles_d = KIN1_GetCycleCounter(); /* get cycle counter */
 
-    cycles = KIN1_GetCycleCounter(); /* get cycle counter */
+    send_serial(&discard, 4);
 
-    send_app_runtime();
+    // Checksum
+    uint32_t dt_int;
+    for (int i=0;i<MSG_SIZE_INT;i++){
+      dt_int = dt[i*4] | (dt[i*4 + 1] << 8) | (dt[i*4 +2] << 16) | (dt[i*4 +3] << 24);
+      if (dt_int != text[i])
+        err_c += 1;
+    }
 
-    // Send output
-    send_output(output);
-    //~ HAL_Delay(1000);
+    send_serial(&discard, 4);
+		send_app_runtime(cycles_e);
+    send_runtime(cycles_d);
+		// Send output
+    send_output(encrypt);
+		send_output(decrypt);
+    send_uint32(err_c);
+	send_uint32(dt);
+	send_uint32(text);
+		//~ HAL_Delay(1000);
+	
+	#endif
   }
-  KIN1_DisableCycleCounter();
+   KIN1_DisableCycleCounter();
 }
 
 /**
