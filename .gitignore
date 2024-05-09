@@ -2,4 +2,5 @@ logs/*.txt
 Build/*
 .vscode/*
 *.stpm
+Data/Power/python_plots/*
 .__pycache__/*
