@@ -31,11 +31,14 @@ y_values = df['y']/1e6
 # print(start_idx)
 
 # calculate energy
-
-
+fig = plt.figure()
+fig.patch.set_facecolor('#B3E5FC')
+plt.rcParams['axes.facecolor'] = '#B3E5FC'
+plt.rcParams.update({"axes.grid" : True, "grid.color": "#0288D1"})
 # Plotting the graph
 plt.plot(x_values, y_values,linestyle='-')  # You can customize the marker and linestyle as needed
 plt.xlabel('Time (s)')  # Replace 'X Axis Label' with your desired label
+# plt.yticks([])
 plt.ylabel('Current (A)')  # Replace 'Y Axis Label' with your desired label
 plt.title('Example of program start and end')  # Replace 'Title of the Graph' with your desired title
 # plt.text(4.28073, 0.047, "Start of program", fontsize=12, ha='center', va='center', color='black')

@@ -1,0 +1,8 @@
+ascon128a: 
+	Runtime E:		5.374752 s
+	Runtime D:		5.451630 s
+	Output E:		0.0
+	Output D:		0.0
+	Err Cnt:		0.0
+	Runtime Py:		17.832572 s
+
