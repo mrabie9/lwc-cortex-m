@@ -236,36 +236,40 @@ int main(void)
 	#ifdef POWER_CONS
     // Sync before app execution
     // HAL_Delay(10000);
-		sync();
+		// sync();
     float discard;
     double encrypt, decrypt;
-    HAL_Delay(2000);
+    // HAL_Delay(2000);
 
 
 
-    KIN1_ResetCycleCounter();  /* reset cycle counter */
-		KIN1_EnableCycleCounter(); /* start counting */
+    // KIN1_ResetCycleCounter();  /* reset cycle counter */
+		// KIN1_EnableCycleCounter(); /* start counting */
+    // HAL_UART_Receive(&huart3, &discard, 4, 2000);
+    HAL_Delay(3000);
+    // HAL_UART_Receive(&huart3, &discard, 4, 2000);
 		for(int i=0;i<N_LOOP;i++)
 			encrypt = ENCRYPT(c, clen, m, msglen, NULL, adlen, NULL, npub, k);
-    cycles_e = KIN1_GetCycleCounter(); /* get cycle counter */
+    // cycles_e = KIN1_GetCycleCounter(); /* get cycle counter */
     HAL_Delay(3000);
-    KIN1_ResetCycleCounter();  /* reset cycle counter */
-		KIN1_EnableCycleCounter(); /* start counting */
-
+    // KIN1_ResetCycleCounter();  /* reset cycle counter */
+		// KIN1_EnableCycleCounter(); /* start counting */
+    // HAL_UART_Receive(&huart3, &discard, 4, 3000);
 		for(int i=0;i<N_LOOP;i++)
 		  decrypt = DECRYPT(dt, mlen, NULL, c, *clen, NULL, adlen, npub, k);
-    cycles_d = KIN1_GetCycleCounter(); /* get cycle counter */
+    // cycles_d = KIN1_GetCycleCounter(); /* get cycle counter */
+    // HAL_UART_Receive(&huart3, &discard, 4, HAL_MAX_DELAY);
     HAL_Delay(2000);  
     // Checksum
-    uint32_t dt_int;
-    for (int i=0;i<MSG_SIZE_INT;i++){
-      dt_int = dt[i*4] | (dt[i*4 + 1] << 8) | (dt[i*4 +2] << 16) | (dt[i*4 +3] << 24);
-      if (dt_int != text[i])
-        err_c += 1;
-    }
-    
-    send_serial(&discard, 4);
-    // Send data
+    // uint32_t dt_int;
+    // for (int i=0;i<MSG_SIZE_INT;i++){
+    //   dt_int = dt[i*4] | (dt[i*4 + 1] << 8) | (dt[i*4 +2] << 16) | (dt[i*4 +3] << 24);
+    //   if (dt_int != text[i])
+    //     err_c += 1;
+    // }
+    // HAL_Delay(2000);
+    // send_serial(&discard, 4);
+    // // Send data
 		send_app_runtime(cycles_e);
     send_runtime(cycles_d);
     send_output(encrypt);
