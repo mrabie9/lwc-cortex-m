@@ -1,4 +1,5 @@
 logs/*.txt
 Build/*
 .vscode/*
+*.stpm
 .__pycache__/*
