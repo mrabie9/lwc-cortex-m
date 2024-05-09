@@ -5,7 +5,7 @@ output_file=$filename.txt
 echo $output_file
 echo > $output_file # Overwrite once 
 
-for app in ascon128Armv7 ascon128aArmv7 isapa128av20Armv7 isapa128v20Armv7 schwaemm256128v2Armv7 schwaemm256256v2Armv7 tinyjambuOpt; do
+for app in schwaemm256128v2Armv7 schwaemm256256v2Armv7 romulusnOpt; do
 	echo "=============================== $app ===============================" >> $output_file
 	# echo "Cleaning $app"
 	make clean -C $wdir/"$app"
