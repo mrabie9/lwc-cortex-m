@@ -5,15 +5,11 @@
 ##### Project setup #####
 # Name of your current project
 PROJ_NAME = $(shell basename "$(CURDIR)")
-BUILD_DIR = ../../Build
+include ../board.mk
 #~ PROJ_NAME = ascon128
 
-# Linker script for STM32xx Device 
-LINKER_SCRIPT = ../../Board/STM32F767ZITx_FLASH.ld
+# Linker script, drivers, CPU flags: see ../board.mk (BOARD=m7|m55)
 
-# Directory containing drivers source code
-CMSIS_DIR = ../../Drivers/CMSIS
-HAL_DIR = ../../Drivers/STM32F7xx_HAL_Driver
 
 ##### Arm Toolchain #####
 TRIPLE  = arm-none-eabi
@@ -27,22 +23,22 @@ SZ 		= $(TRIPLE)-size
 
 ##### Compiler options #####
 CFLAGS = -g -T$(LINKER_SCRIPT) -w
-CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m7
-CFLAGS += -mfloat-abi=soft --specs=nosys.specs
+CFLAGS += -mlittle-endian -mthumb $(CPU_FLAGS)
+CFLAGS += $(FLOAT_ABI) --specs=nosys.specs
 
 ##### Project specific libraries #####
 SRC_FILES += $(wildcard Src/*.c)
 CFLAGS += -IInc
 
 ##### Drivers libraries and source code #####
-CFLAGS += -I$(CMSIS_DIR)/Include
-CFLAGS += -I$(CMSIS_DIR)/Device/ST/STM32F7xx/Include
+CFLAGS += -I$(CMSIS_INC)
+CFLAGS += -I$(DEVICE_INC)
 
-SRC_FILES += ../../Startup/*
+SRC_FILES += $(STARTUP)
 SRC_FILES += $(HAL_DIR)/Src/*
-SRC_FILES += ../Common/Src/*
+SRC_FILES += $(BOARD_SRC)
 CFLAGS += -I$(HAL_DIR)/Inc
-CFLAGS += -I../Common/Inc
+CFLAGS += $(BOARD_INC)
 
 all: $(PROJ_NAME).elf 
 #$(PROJ_NAME).bin $(PROJ_NAME).hex
@@ -60,10 +56,11 @@ clean:
 	rm -f $(BUILD_DIR)/$(PROJ_NAME)_Pwr.bin $(BUILD_DIR)/$(PROJ_NAME)_Pwr.hex $(BUILD_DIR)/$(PROJ_NAME)_Pwr.elf $(BUILD_DIR)/$(PROJ_NAME)_Pwr.o
 
 $(PROJ_NAME).elf: $(SRC_FILES) 
-	$(CC) -O3 $(CFLAGS)  -o $(BUILD_DIR)/$(PROJ_NAME)_Pwr_O3.elf $^ -DSTM32F767xx -Wl,--print-memory-usage #-fstack-usage
-	$(CC) -O2 $(CFLAGS)  -o $(BUILD_DIR)/$(PROJ_NAME)_Pwr_O2.elf $^ -DSTM32F767xx -Wl,--print-memory-usage #-fstack-usage
-	$(CC) -Os $(CFLAGS)  -o $(BUILD_DIR)/$(PROJ_NAME)_Pwr_Os.elf $^ -DSTM32F767xx -Wl,--print-memory-usage #-fstack-usage
-	# $(CC) -O0 $(CFLAGS)  -o $(BUILD_DIR)/$(PROJ_NAME)_Pwr_O0.elf $^ -DSTM32F767xx -Wl,--print-memory-usage #-fstack-usage
+	mkdir -p $(BUILD_DIR)
+	$(CC) -O3 $(CFLAGS)  -o $(BUILD_DIR)/$(PROJ_NAME)_Pwr_O3.elf $^ $(DEVICE_DEF) -Wl,--print-memory-usage #-fstack-usage
+	$(CC) -O2 $(CFLAGS)  -o $(BUILD_DIR)/$(PROJ_NAME)_Pwr_O2.elf $^ $(DEVICE_DEF) -Wl,--print-memory-usage #-fstack-usage
+	$(CC) -Os $(CFLAGS)  -o $(BUILD_DIR)/$(PROJ_NAME)_Pwr_Os.elf $^ $(DEVICE_DEF) -Wl,--print-memory-usage #-fstack-usage
+	# $(CC) -O0 $(CFLAGS)  -o $(BUILD_DIR)/$(PROJ_NAME)_Pwr_O0.elf $^ $(DEVICE_DEF) -Wl,--print-memory-usage #-fstack-usage
 	$(SZ) $(BUILD_DIR)/$(PROJ_NAME)_Pwr_O3.elf
 	$(SZ) $(BUILD_DIR)/$(PROJ_NAME)_Pwr_O2.elf
 	$(SZ) $(BUILD_DIR)/$(PROJ_NAME)_Pwr_Os.elf

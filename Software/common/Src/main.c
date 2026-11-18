@@ -39,6 +39,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 UART_HandleTypeDef huart3;
+#if !defined(STM32N657xx)
 TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim7;
 
@@ -47,6 +48,9 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 //~ static void MX_TIM2_Init(void);
 static void MX_USART3_UART_Init(void);
+#endif
+/* M55 (NUCLEO-N657X0-Q): prototypes in common_m55/Inc/main.h,
+ * implementations in common_m55/Src/board_m55.c */
 
 /* DWT (Data Watchpoint and Trace) registers, only exists on ARM Cortex with a DWT unit */
 #define KIN1_DWT_CONTROL (*((volatile uint32_t *)0xE0001000))
@@ -170,6 +174,10 @@ int main(void)
 
   /* USER CODE END 1 */
 
+#if defined(STM32N657xx)
+  Board_CacheInit(); /* M55: I/D-cache on/off, see M55_ENABLE_CACHES */
+#endif
+
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -193,8 +201,13 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   KIN1_InitCycleCounter(); /* enable DWT hardware */
+#if defined(STM32N657xx)
+  /* Armv8.1-M has no DWT lock register; CPU clock is IC1, not SYSCLK */
+  freq = HAL_RCC_GetCpuClockFreq();
+#else
   KIN1_EnableLockAccess();
   freq = HAL_RCC_GetSysClockFreq();
+#endif
 
 #if CRYPTO_KEYBYTES==16
     volatile unsigned char key[CRYPTO_KEYBYTES] = {0xDEADBEEF, 0x01234567, 0x89ABCDEF, 0xDEADBEEF};
@@ -319,6 +332,7 @@ int main(void)
    KIN1_DisableCycleCounter();
 }
 
+#if !defined(STM32N657xx) /* M7 board init; M55 version is in common_m55/Src/board_m55.c */
 /**
  * @brief System Clock Configuration
  * @retval None
@@ -460,6 +474,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USB_OverCurrent_GPIO_Port, &GPIO_InitStruct);
 }
+#endif /* !STM32N657xx */
 
 /* USER CODE BEGIN 4 */
 

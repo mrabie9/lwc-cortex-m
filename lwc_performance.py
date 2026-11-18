@@ -36,6 +36,12 @@ elif board =="m33":
 		xl_output = "Data/DWT_var.xlsx"
 	else:
 		xl_output = "Data/Data_m33.xlsx"
+elif board == "m55":	# NUCLEO-N657X0-Q, flashed by openocd_m55.sh
+	serial_port =  "COMx" 	# TODO: set to the N657 ST-LINK VCP port (Device Manager)
+	if DWT_VAR:
+		xl_output = "Data/DWT_var_m55.xlsx"
+	else:
+		xl_output = "Data/Data_m55.xlsx"
 
 # App details
 algorithm = ''
